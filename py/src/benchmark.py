@@ -35,7 +35,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Callable, Iterable
 
-from .extractors import pymupdf_base
+from .extractors import hibrido_pymupdf_rapidocr, pymupdf_base, rapidocr_full
 from .metrics import calcular_metricas
 from .schemas import ResultadoExtracao
 
@@ -67,6 +67,8 @@ COLUNAS_CSV = [
 # Registro de extratores. Cada item: (nome, callable que retorna ResultadoExtracao)
 EXTRATORES: list[tuple[str, Callable[[Path], ResultadoExtracao]]] = [
     (pymupdf_base.NOME_EXTRATOR, pymupdf_base.extrair),
+    (rapidocr_full.NOME_EXTRATOR, rapidocr_full.extrair),
+    (hibrido_pymupdf_rapidocr.NOME_EXTRATOR, hibrido_pymupdf_rapidocr.extrair),
 ]
 
 

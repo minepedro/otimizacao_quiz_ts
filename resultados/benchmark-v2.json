@@ -1,11 +1,29 @@
 {
   "pymupdf": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 0.0177,
+    "tempo_seg_medio": 0.0204,
     "sim_levenshtein": 0.6018,
     "cobertura_palavras": 0.717,
     "sim_bigramas": 0.6671,
     "tamanho_relativo": 0.691,
     "qualidade_excesso": 0.8333
+  },
+  "rapidocr-full": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 24.4859,
+    "sim_levenshtein": 0.6508,
+    "cobertura_palavras": 0.7657,
+    "sim_bigramas": 0.692,
+    "tamanho_relativo": 0.8201,
+    "qualidade_excesso": 0.7008
+  },
+  "hibrido-pymupdf-rapidocr": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 6.2517,
+    "sim_levenshtein": 0.6995,
+    "cobertura_palavras": 0.8056,
+    "sim_bigramas": 0.7016,
+    "tamanho_relativo": 0.8272,
+    "qualidade_excesso": 0.7292
   }
 }
