@@ -62,9 +62,12 @@ resultados/_*
 resultados/saidas-comparadas/
 resultados/hyperparam-search/
 
-# ---- Cache do tesseract.js (modelos baixados em runtime) ----
+# ---- Cache do tesseract (modelos baixados em runtime) ----
+# *.traineddata sao 5-15MB cada e podem ser baixados de
+# https://github.com/tesseract-ocr/tessdata
 *.traineddata
 .tesseract-cache-*/
+py/tessdata/
 
 # ---- Pastas temporarias de subprocess (Docling, MinerU) ----
 .docling-tmp/

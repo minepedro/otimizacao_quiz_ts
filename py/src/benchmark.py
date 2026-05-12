@@ -35,7 +35,13 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Callable, Iterable
 
-from .extractors import hibrido_pymupdf_rapidocr, pymupdf_base, rapidocr_full
+from .extractors import (
+    hibrido_pymupdf_rapidocr,
+    paddleocr_full,
+    pymupdf_base,
+    rapidocr_full,
+    tesseract_full,
+)
 from .metrics import calcular_metricas
 from .schemas import ResultadoExtracao
 
@@ -68,6 +74,8 @@ COLUNAS_CSV = [
 EXTRATORES: list[tuple[str, Callable[[Path], ResultadoExtracao]]] = [
     (pymupdf_base.NOME_EXTRATOR, pymupdf_base.extrair),
     (rapidocr_full.NOME_EXTRATOR, rapidocr_full.extrair),
+    (paddleocr_full.NOME_EXTRATOR, paddleocr_full.extrair),
+    (tesseract_full.NOME_EXTRATOR, tesseract_full.extrair),
     (hibrido_pymupdf_rapidocr.NOME_EXTRATOR, hibrido_pymupdf_rapidocr.extrair),
 ]
 
