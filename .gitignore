@@ -50,6 +50,7 @@ resultados/*
 !resultados/benchmark.csv
 !resultados/benchmark.json
 !resultados/gabaritos_metadata.json
+!resultados/gabaritos_v2_metadata.json
 !resultados/raio-x/
 resultados/raio-x/*
 !resultados/raio-x/.gitkeep
