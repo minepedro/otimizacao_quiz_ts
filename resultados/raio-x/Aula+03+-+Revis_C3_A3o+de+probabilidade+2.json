@@ -1,0 +1,25 @@
+{
+  "arquivo": "Aula+03+-+Revis_C3_A3o+de+probabilidade+2.pdf",
+  "tamanhoBytes": 689375,
+  "tamanhoMB": 0.66,
+  "numPaginas": 8,
+  "dimensoesMedias": {
+    "largura": 540,
+    "altura": 720
+  },
+  "caracteresExtraidos": 5647,
+  "caracteresPorPagina": {
+    "media": 704,
+    "min": 47,
+    "max": 1325
+  },
+  "paginasComPoucoTexto": [
+    8
+  ],
+  "numImagensReportadas": 20,
+  "comGabarito": {
+    "caracteresGabarito": 5291,
+    "razaoExtraidoSobreGabarito": 1.0673,
+    "estimativaConteudoEmImagem": 0
+  }
+}

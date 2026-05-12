@@ -1,0 +1,27 @@
+{
+  "arquivo": "Aula+2+-+Economia+como+Ci_C3_AAncia+Social.pdf",
+  "tamanhoBytes": 2370116,
+  "tamanhoMB": 2.26,
+  "numPaginas": 14,
+  "dimensoesMedias": {
+    "largura": 960,
+    "altura": 540
+  },
+  "caracteresExtraidos": 9363,
+  "caracteresPorPagina": {
+    "media": 667,
+    "min": 25,
+    "max": 1481
+  },
+  "paginasComPoucoTexto": [
+    1,
+    3,
+    14
+  ],
+  "numImagensReportadas": 15,
+  "comGabarito": {
+    "caracteresGabarito": 11807,
+    "razaoExtraidoSobreGabarito": 0.793,
+    "estimativaConteudoEmImagem": 0.207
+  }
+}

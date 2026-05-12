@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "descricao": "Manifesto dos PDFs do laboratorio. Toda vez que adicionar PDF novo em dados/pdfs/, registre aqui. Campos preenchidos ajudam a IA entender o conjunto sem abrir cada PDF, e permitem segmentar o benchmark por tipo/area no futuro.",
+  "campos": {
+    "tipo": "Categoria do PDF: slides | livro | apostila | paper | outro",
+    "area": "Area de conhecimento: computacao, matematica, economia, etc. Use minusculas, sem acento.",
+    "fonte": "Origem (universidade, autor, livre)",
+    "temImagens": "true se tem imagens/screenshots significativas (afeta extracao de texto puro)",
+    "copyright": "true se ha restricao de copyright (Claude pode recusar)",
+    "notas": "Observacoes livres — caracteristicas, achados, casos especiais"
+  },
+  "pdfs": {
+    "Aula 04 - Redes de Computadores.pdf": {
+      "tipo": "slides",
+      "area": "computacao",
+      "fonte": "ufrj",
+      "temImagens": true,
+      "copyright": false,
+      "notas": "31 paginas. Baseline limpo — todos os 5 extratores ficaram em ~95-100% de cobertura. Diagramas sao desenhos vetoriais (nao screenshots), entao extratores de texto puro funcionam bem."
+    },
+    "Aula+03+-+Revis_C3_A3o+de+probabilidade+2.pdf": {
+      "tipo": "slides",
+      "area": "matematica",
+      "fonte": "ufrj",
+      "temImagens": true,
+      "copyright": false,
+      "notas": "8 paginas, formulas matematicas. mupdf reporta 'No common ancestor in structure tree' (estrutura de acessibilidade quebrada) — extrai mesmo assim."
+    },
+    "Aula+2+-+Economia+como+Ci_C3_AAncia+Social.pdf": {
+      "tipo": "slides",
+      "area": "economia",
+      "fonte": "ufrj",
+      "temImagens": true,
+      "copyright": false,
+      "notas": "14 paginas. CASO CRITICO: ~22% do conteudo esta em screenshots — todos os 5 extratores de texto puro travaram em 0.784 de cobertura, exatamente os mesmos 22% perdidos. Confirma achado do lab Python. OCR resolve."
+    },
+    "Aula+04+%28resolu%C3%A7%C3%A3o%29.pdf": {
+      "tipo": "exercicios",
+      "area": "matematica",
+      "fonte": "ufrj",
+      "temImagens": true,
+      "copyright": false,
+      "notas": "4 paginas, ~99.8% imagem (PDF escaneado de resolucao manuscrita ou impressa de exercicios de probabilidade). Conteudo: simbolos matematicos (interseccao, uniao, potencias), diagramas de arvore, notacao numerica BR. CASO LIMITE: tesseract.js ficou em 0.18 cobertura (e tesseract puro tambem — nao e falha do hibrido). Heuristica do hibrido-unpdf detectou corretamente que precisa OCR (todas 4 paginas), mas o motor (tesseract.js) e o gargalo. Pra esse tipo de conteudo precisa OCR matematico especializado (Mathpix) ou LLM multimodal (Claude API)."
+    },
+    "EPM 309 - Aula 3 - Introdução ao Sistema Toyota de Produção STP-1.pdf": {
+      "tipo": "slides",
+      "area": "engenharia-producao",
+      "fonte": "ufrj",
+      "temImagens": null,
+      "copyright": false,
+      "notas": "Slides de Engenharia de Producao (EPM 309). Conteudo sobre Sistema Toyota de Producao."
+    },
+    "EPM 309 - Aula 6 - PokaYoke.pdf": {
+      "tipo": "slides",
+      "area": "engenharia-producao",
+      "fonte": "ufrj",
+      "temImagens": null,
+      "copyright": false,
+      "notas": "Slides de Engenharia de Producao (EPM 309). Conteudo sobre Poka-Yoke (a prova de erros)."
+    },
+    "EPM309 - Aula 10 - Introdução ao 5S.pdf": {
+      "tipo": "slides",
+      "area": "engenharia-producao",
+      "fonte": "ufrj",
+      "temImagens": null,
+      "copyright": false,
+      "notas": "Slides de Engenharia de Producao (EPM 309). Conteudo sobre 5S. PDF maior (3.4MB), possivelmente com mais imagens/screenshots."
+    },
+    "Manual Como Criar uma Pesquisa de Mercado.pdf": {
+      "tipo": "apostila",
+      "area": "marketing",
+      "fonte": null,
+      "temImagens": null,
+      "copyright": null,
+      "notas": "Manual/apostila sobre criar pesquisa de mercado. 4MB. Provavelmente texto corrido com diagramas — primeiro exemplo de apostila nao-slide no lab."
+    },
+    "Realismo.pdf": {
+      "tipo": "apostila",
+      "area": "literatura",
+      "fonte": null,
+      "temImagens": null,
+      "copyright": null,
+      "notas": "Material sobre Realismo portugues (literatura). Primeiro PDF de humanas no lab."
+    }
+  }
+}

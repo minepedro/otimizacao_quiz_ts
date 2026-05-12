@@ -1,0 +1,27 @@
+{
+  "arquivo": "EPM 309 - Aula 6 - PokaYoke.pdf",
+  "tamanhoBytes": 1014730,
+  "tamanhoMB": 0.97,
+  "numPaginas": 12,
+  "dimensoesMedias": {
+    "largura": 960,
+    "altura": 540
+  },
+  "caracteresExtraidos": 2724,
+  "caracteresPorPagina": {
+    "media": 225,
+    "min": 28,
+    "max": 492
+  },
+  "paginasComPoucoTexto": [
+    2,
+    4,
+    11
+  ],
+  "numImagensReportadas": 33,
+  "comGabarito": {
+    "caracteresGabarito": 3864,
+    "razaoExtraidoSobreGabarito": 0.705,
+    "estimativaConteudoEmImagem": 0.295
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "porExtrator": {
+    "pdf-parse": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 0.0489,
+      "simLevenshteinMedia": 0.7157,
+      "coberturaPalavrasMedia": 0.6929,
+      "simBigramasMedia": 0.7599,
+      "tamanhoRelativoMedio": 0.7543,
+      "qualidadeExcessoMedia": 0.827
+    },
+    "pdfjs-dist": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 0.0584,
+      "simLevenshteinMedia": 0.6423,
+      "coberturaPalavrasMedia": 0.7627,
+      "simBigramasMedia": 0.7539,
+      "tamanhoRelativoMedio": 0.7751,
+      "qualidadeExcessoMedia": 0.7246
+    },
+    "unpdf": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 0.057,
+      "simLevenshteinMedia": 0.7279,
+      "coberturaPalavrasMedia": 0.7702,
+      "simBigramasMedia": 0.7983,
+      "tamanhoRelativoMedio": 0.765,
+      "qualidadeExcessoMedia": 0.9192
+    },
+    "pdf2json": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 0.3531,
+      "simLevenshteinMedia": 0.2779,
+      "coberturaPalavrasMedia": 0.7692,
+      "simBigramasMedia": 0.7415,
+      "tamanhoRelativoMedio": 0.9077,
+      "qualidadeExcessoMedia": 0.4657
+    },
+    "mupdf": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 0.0242,
+      "simLevenshteinMedia": 0.7282,
+      "coberturaPalavrasMedia": 0.7702,
+      "simBigramasMedia": 0.7976,
+      "tamanhoRelativoMedio": 0.7649,
+      "qualidadeExcessoMedia": 0.9365
+    },
+    "tesseract": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 13.2903,
+      "simLevenshteinMedia": 0.7483,
+      "coberturaPalavrasMedia": 0.8446,
+      "simBigramasMedia": 0.6781,
+      "tamanhoRelativoMedio": 1.0283,
+      "qualidadeExcessoMedia": 0.7172
+    },
+    "tesseract-unpdf": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 14.7816,
+      "simLevenshteinMedia": 0.7442,
+      "coberturaPalavrasMedia": 0.8377,
+      "simBigramasMedia": 0.6855,
+      "tamanhoRelativoMedio": 1.0252,
+      "qualidadeExcessoMedia": 0.7359
+    },
+    "hibrido": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 5.183,
+      "simLevenshteinMedia": 0.7598,
+      "coberturaPalavrasMedia": 0.8486,
+      "simBigramasMedia": 0.756,
+      "tamanhoRelativoMedio": 1.0036,
+      "qualidadeExcessoMedia": 0.6977
+    },
+    "hibrido2": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 9.0784,
+      "simLevenshteinMedia": 0.7513,
+      "coberturaPalavrasMedia": 0.8619,
+      "simBigramasMedia": 0.6976,
+      "tamanhoRelativoMedio": 1.0295,
+      "qualidadeExcessoMedia": 0.7435
+    },
+    "hibrido-unpdf": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 9.9026,
+      "simLevenshteinMedia": 0.7611,
+      "coberturaPalavrasMedia": 0.8627,
+      "simBigramasMedia": 0.7113,
+      "tamanhoRelativoMedio": 1.0408,
+      "qualidadeExcessoMedia": 0.7375
+    },
+    "hibrido-unpdf-img": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 6.86,
+      "simLevenshteinMedia": 0.7598,
+      "coberturaPalavrasMedia": 0.8862,
+      "simBigramasMedia": 0.7114,
+      "tamanhoRelativoMedio": 1.0487,
+      "qualidadeExcessoMedia": 0.753
+    },
+    "hibrido-unpdf-img-hash": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 7.3697,
+      "simLevenshteinMedia": 0.7801,
+      "coberturaPalavrasMedia": 0.8953,
+      "simBigramasMedia": 0.7199,
+      "tamanhoRelativoMedio": 1.0982,
+      "qualidadeExcessoMedia": 0.7509
+    },
+    "hibrido-unpdf-img-hash-clean": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 7.3525,
+      "simLevenshteinMedia": 0.7849,
+      "coberturaPalavrasMedia": 0.895,
+      "simBigramasMedia": 0.7341,
+      "tamanhoRelativoMedio": 1.0881,
+      "qualidadeExcessoMedia": 0.7605
+    },
+    "hibrido-clean-best": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 10.4937,
+      "simLevenshteinMedia": 0.7863,
+      "coberturaPalavrasMedia": 0.8994,
+      "simBigramasMedia": 0.7318,
+      "tamanhoRelativoMedio": 1.0868,
+      "qualidadeExcessoMedia": 0.742
+    },
+    "hibrido-clean-conf": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 7.2434,
+      "simLevenshteinMedia": 0.8224,
+      "coberturaPalavrasMedia": 0.8848,
+      "simBigramasMedia": 0.8129,
+      "tamanhoRelativoMedio": 0.9288,
+      "qualidadeExcessoMedia": 0.6479
+    },
+    "hibrido-clean-prep": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 29.4858,
+      "simLevenshteinMedia": 0.7405,
+      "coberturaPalavrasMedia": 0.8813,
+      "simBigramasMedia": 0.7009,
+      "tamanhoRelativoMedio": 2.6694,
+      "qualidadeExcessoMedia": 0.7894
+    },
+    "hibrido-clean-multi": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 22.3824,
+      "simLevenshteinMedia": 0.7047,
+      "coberturaPalavrasMedia": 0.9033,
+      "simBigramasMedia": 0.6505,
+      "tamanhoRelativoMedio": 1.3448,
+      "qualidadeExcessoMedia": 0.7496
+    },
+    "hibrido-clean-conf-multi": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 22.8866,
+      "simLevenshteinMedia": 0.801,
+      "coberturaPalavrasMedia": 0.895,
+      "simBigramasMedia": 0.783,
+      "tamanhoRelativoMedio": 0.9856,
+      "qualidadeExcessoMedia": 0.638
+    },
+    "hibrido-clean-prep-conf": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 31.5954,
+      "simLevenshteinMedia": 0.81,
+      "coberturaPalavrasMedia": 0.8593,
+      "simBigramasMedia": 0.8035,
+      "tamanhoRelativoMedio": 0.9858,
+      "qualidadeExcessoMedia": 0.6734
+    },
+    "hibrido-clean-conf-best": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 10.7027,
+      "simLevenshteinMedia": 0.8226,
+      "coberturaPalavrasMedia": 0.8843,
+      "simBigramasMedia": 0.8124,
+      "tamanhoRelativoMedio": 0.9276,
+      "qualidadeExcessoMedia": 0.629
+    },
+    "docling": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 30.5857,
+      "simLevenshteinMedia": 0.6926,
+      "coberturaPalavrasMedia": 0.8292,
+      "simBigramasMedia": 0.8277,
+      "tamanhoRelativoMedio": 1.0073,
+      "qualidadeExcessoMedia": 0.7699
+    },
+    "mineru": {
+      "numPdfs": 9,
+      "numErros": 1,
+      "tempoMedio": 33.9765,
+      "simLevenshteinMedia": 0.6984,
+      "coberturaPalavrasMedia": 0.8642,
+      "simBigramasMedia": 0.577,
+      "tamanhoRelativoMedio": 1.6848,
+      "qualidadeExcessoMedia": 0.4639
+    },
+    "hibrido-unpdf-bbox": {
+      "numPdfs": 9,
+      "numErros": 0,
+      "tempoMedio": 7.72,
+      "simLevenshteinMedia": 0.7374,
+      "coberturaPalavrasMedia": 0.8842,
+      "simBigramasMedia": 0.7301,
+      "tamanhoRelativoMedio": 1.0955,
+      "qualidadeExcessoMedia": 0.7586
+    }
+  }
+}

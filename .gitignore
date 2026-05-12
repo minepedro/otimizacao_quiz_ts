@@ -1,0 +1,68 @@
+# ============================================================
+# .gitignore — otimizacao_quiz_ts (repo publico)
+# ============================================================
+
+# ---- Segredos ----
+.env
+.env.*
+!.env.example
+*.key
+
+# ---- Node (TS lab em ts/) ----
+node_modules/
+dist/
+*.log
+.npm/
+
+# ---- Python (Python lab em py/) ----
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---- IDE / OS ----
+.vscode/
+.idea/
+.cursor/
+.claude/
+.DS_Store
+Thumbs.db
+
+# ---- Dados privados (PDFs com copyright, gabaritos pagos) ----
+dados/pdfs/*
+!dados/pdfs/.gitkeep
+dados/gabaritos/*.txt
+!dados/gabaritos/.gitkeep
+dados/gabaritos-v2-md/*.md
+!dados/gabaritos-v2-md/.gitkeep
+dados/gabaritos-v2-json/*.json
+!dados/gabaritos-v2-json/.gitkeep
+
+# ---- Resultados ----
+# Por padrao ignora tudo, mas commita os arquivos "oficiais" do benchmark
+resultados/*
+!resultados/.gitkeep
+!resultados/benchmark.csv
+!resultados/benchmark.json
+!resultados/gabaritos_metadata.json
+!resultados/raio-x/
+resultados/raio-x/*
+!resultados/raio-x/.gitkeep
+!resultados/raio-x/*.json
+# Pastas/arquivos temporarios — sempre ignorar
+resultados/_*
+resultados/saidas-comparadas/
+resultados/hyperparam-search/
+
+# ---- Cache do tesseract.js (modelos baixados em runtime) ----
+*.traineddata
+.tesseract-cache-*/
+
+# ---- Pastas temporarias de subprocess (Docling, MinerU) ----
+.docling-tmp/
+.mineru-tmp/

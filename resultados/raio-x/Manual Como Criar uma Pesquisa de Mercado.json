@@ -1,0 +1,23 @@
+{
+  "arquivo": "Manual Como Criar uma Pesquisa de Mercado.pdf",
+  "tamanhoBytes": 3964838,
+  "tamanhoMB": 3.78,
+  "numPaginas": 3,
+  "dimensoesMedias": {
+    "largura": 595,
+    "altura": 842
+  },
+  "caracteresExtraidos": 3802,
+  "caracteresPorPagina": {
+    "media": 1265,
+    "min": 345,
+    "max": 1805
+  },
+  "paginasComPoucoTexto": [],
+  "numImagensReportadas": 0,
+  "comGabarito": {
+    "caracteresGabarito": 3605,
+    "razaoExtraidoSobreGabarito": 1.0546,
+    "estimativaConteudoEmImagem": 0
+  }
+}

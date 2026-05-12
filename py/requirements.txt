@@ -1,0 +1,52 @@
+# ============================================================
+# requirements.txt — pipeline Python do otimizacao_quiz_ts
+# ============================================================
+# Pre-requisito: Python 3.10, 3.11 ou 3.12 (Windows nao suporta 3.13
+# por causa da dependencia `ray` do MinerU)
+#
+# Setup:
+#   cd py
+#   py -3.12 -m venv .venv
+#   .venv/Scripts/pip install -r requirements.txt
+#
+# Pra GPU (RTX 50/40/30, CUDA 12.8):
+#   .venv/Scripts/pip install --upgrade --force-reinstall \
+#     torch torchvision --index-url https://download.pytorch.org/whl/cu128
+# ============================================================
+
+# Extracao base
+pymupdf>=1.24
+pdfplumber>=0.11
+pypdfium2>=4.30
+
+# OCR
+paddleocr>=2.8
+# tesseract via pytesseract eh fallback opcional (precisa do binario do sistema)
+# pytesseract>=0.3
+
+# Imagem / preprocessamento
+pillow>=10.0
+opencv-python-headless>=4.10
+numpy>=1.26
+
+# Validacao / schemas
+pydantic>=2.7
+
+# API Anthropic (gabarito v2)
+anthropic>=0.40
+python-dotenv>=1.0
+
+# Utilitarios
+tqdm>=4.66
+loguru>=0.7
+
+# Comparacao com Docling/MinerU (instalacoes separadas, opcional)
+# docling>=2.0
+# mineru[all]>=3.0
+
+# Hyperparam search + analise
+pandas>=2.2
+matplotlib>=3.9
+
+# Testes
+pytest>=8.0

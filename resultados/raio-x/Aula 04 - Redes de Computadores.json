@@ -1,0 +1,33 @@
+{
+  "arquivo": "Aula 04 - Redes de Computadores.pdf",
+  "tamanhoBytes": 2428303,
+  "tamanhoMB": 2.32,
+  "numPaginas": 31,
+  "dimensoesMedias": {
+    "largura": 960,
+    "altura": 540
+  },
+  "caracteresExtraidos": 9701,
+  "caracteresPorPagina": {
+    "media": 311,
+    "min": 0,
+    "max": 706
+  },
+  "paginasComPoucoTexto": [
+    1,
+    22,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    31
+  ],
+  "numImagensReportadas": 1050,
+  "comGabarito": {
+    "caracteresGabarito": 9388,
+    "razaoExtraidoSobreGabarito": 1.0333,
+    "estimativaConteudoEmImagem": 0
+  }
+}

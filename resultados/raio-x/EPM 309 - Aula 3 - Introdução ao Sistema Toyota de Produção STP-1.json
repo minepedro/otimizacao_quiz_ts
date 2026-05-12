@@ -1,0 +1,35 @@
+{
+  "arquivo": "EPM 309 - Aula 3 - Introdução ao Sistema Toyota de Produção STP-1.pdf",
+  "tamanhoBytes": 1443932,
+  "tamanhoMB": 1.38,
+  "numPaginas": 20,
+  "dimensoesMedias": {
+    "largura": 960,
+    "altura": 540
+  },
+  "caracteresExtraidos": 4449,
+  "caracteresPorPagina": {
+    "media": 220,
+    "min": 28,
+    "max": 702
+  },
+  "paginasComPoucoTexto": [
+    2,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    17,
+    20
+  ],
+  "numImagensReportadas": 46,
+  "comGabarito": {
+    "caracteresGabarito": 5565,
+    "razaoExtraidoSobreGabarito": 0.7995,
+    "estimativaConteudoEmImagem": 0.2005
+  }
+}

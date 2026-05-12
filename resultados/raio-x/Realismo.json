@@ -1,0 +1,26 @@
+{
+  "arquivo": "Realismo.pdf",
+  "tamanhoBytes": 892057,
+  "tamanhoMB": 0.85,
+  "numPaginas": 21,
+  "dimensoesMedias": {
+    "largura": 718,
+    "altura": 537
+  },
+  "caracteresExtraidos": 10897,
+  "caracteresPorPagina": {
+    "media": 517,
+    "min": 0,
+    "max": 1275
+  },
+  "paginasComPoucoTexto": [
+    1,
+    16
+  ],
+  "numImagensReportadas": 56,
+  "comGabarito": {
+    "caracteresGabarito": 10270,
+    "razaoExtraidoSobreGabarito": 1.0611,
+    "estimativaConteudoEmImagem": 0
+  }
+}

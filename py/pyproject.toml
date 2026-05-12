@@ -1,0 +1,28 @@
+[project]
+name = "otimizacao-quiz-py"
+version = "0.1.0"
+description = "Pipeline Python de extração de PDF — pareado ao lab TS, foco em qualidade máxima com modelos pesados (PyMuPDF, PaddleOCR, layout detection)"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { text = "MIT" }
+authors = [
+  { name = "Pedro" },
+]
+
+# As dependencias reais sao gerenciadas via requirements.txt
+# (mais compativel com instalacao em CPU vs GPU sem precisar de extras)
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.6",
+  "mypy>=1.10",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

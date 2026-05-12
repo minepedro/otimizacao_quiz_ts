@@ -1,0 +1,28 @@
+{
+  "arquivo": "Aula+04+%28resolu%C3%A7%C3%A3o%29.pdf",
+  "tamanhoBytes": 1229756,
+  "tamanhoMB": 1.17,
+  "numPaginas": 4,
+  "dimensoesMedias": {
+    "largura": 611,
+    "altura": 840
+  },
+  "caracteresExtraidos": 8,
+  "caracteresPorPagina": {
+    "media": 0,
+    "min": 0,
+    "max": 0
+  },
+  "paginasComPoucoTexto": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "numImagensReportadas": 4,
+  "comGabarito": {
+    "caracteresGabarito": 4203,
+    "razaoExtraidoSobreGabarito": 0.0019,
+    "estimativaConteudoEmImagem": 0.9981
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "Aula 04 - Redes de Computadores": {
+    "numPaginas": 31,
+    "numCaracteres": 9388,
+    "tempoSegundos": 76.08,
+    "tokensInput": 52291,
+    "tokensOutput": 2849,
+    "custoUsd": 0.1996,
+    "numChunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-31",
+        "depth": 0,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  },
+  "Aula+03+-+Revis_C3_A3o+de+probabilidade+2": {
+    "numPaginas": 8,
+    "numCaracteres": 5291,
+    "tempoSegundos": 43.97,
+    "tokensInput": 14864,
+    "tokensOutput": 1800,
+    "custoUsd": 0.0716,
+    "numChunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-8",
+        "depth": 0,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  },
+  "Aula+2+-+Economia+como+Ci_C3_AAncia+Social": {
+    "numPaginas": 14,
+    "numCaracteres": 11807,
+    "tempoSegundos": 94.44,
+    "tokensInput": 25403,
+    "tokensOutput": 3610,
+    "custoUsd": 0.1304,
+    "numChunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-14",
+        "depth": 0,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  },
+  "Aula+04+%28resolu%C3%A7%C3%A3o%29": {
+    "numPaginas": 4,
+    "numCaracteres": 4203,
+    "tempoSegundos": 37.86,
+    "tokensInput": 6571,
+    "tokensOutput": 2089,
+    "custoUsd": 0.051,
+    "numChunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-4",
+        "depth": 0,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  },
+  "EPM 309 - Aula 3 - Introdução ao Sistema Toyota de Produção STP-1": {
+    "numPaginas": 20,
+    "numCaracteres": 5565,
+    "tempoSegundos": 47.57,
+    "tokensInput": 33301,
+    "tokensOutput": 1778,
+    "custoUsd": 0.1266,
+    "numChunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-20",
+        "depth": 0,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  },
+  "EPM 309 - Aula 6 - PokaYoke": {
+    "numPaginas": 12,
+    "numCaracteres": 3864,
+    "tempoSegundos": 32.71,
+    "tokensInput": 20103,
+    "tokensOutput": 1267,
+    "custoUsd": 0.0793,
+    "numChunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-12",
+        "depth": 0,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  },
+  "EPM309 - Aula 10 - Introdução ao 5S": {
+    "numPaginas": 72,
+    "numCaracteres": 7750,
+    "tempoSegundos": 98.44,
+    "tokensInput": 116037,
+    "tokensOutput": 2859,
+    "custoUsd": 0.391,
+    "numChunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-72",
+        "depth": 0,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  },
+  "Manual Como Criar uma Pesquisa de Mercado": {
+    "numPaginas": 3,
+    "numCaracteres": 3605,
+    "tempoSegundos": 29.01,
+    "tokensInput": 6215,
+    "tokensOutput": 1237,
+    "custoUsd": 0.0372,
+    "numChunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-3",
+        "depth": 0,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  },
+  "Realismo": {
+    "numPaginas": 21,
+    "numCaracteres": 10270,
+    "tempoSegundos": 282.19,
+    "tokensInput": 37351,
+    "tokensOutput": 3359,
+    "custoUsd": 0.1624,
+    "numChunks": 11,
+    "chunks": [
+      {
+        "paginas": "pg 1-21",
+        "depth": 0,
+        "stopReason": null,
+        "erro": "Error: {\"type\":\"error\",\"error\":{\"details\":null,\"type\":\"invalid_request_error\",\"message\":\"Output blocked by content filtering policy\"},\"request_id\":\"req_011Caw7jq5Kox9CRm1ELvBj1\" }",
+        "foiDividido": true
+      },
+      {
+        "paginas": "pg 1-10",
+        "depth": 1,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      },
+      {
+        "paginas": "pg 11-21",
+        "depth": 1,
+        "stopReason": null,
+        "erro": "Error: {\"type\":\"error\",\"error\":{\"details\":null,\"type\":\"invalid_request_error\",\"message\":\"Output blocked by content filtering policy\"},\"request_id\":\"req_011Caw7shNwTxTbqLJaPB5zk\"   }",
+        "foiDividido": true
+      },
+      {
+        "paginas": "pg 11-15",
+        "depth": 2,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      },
+      {
+        "paginas": "pg 16-21",
+        "depth": 2,
+        "stopReason": null,
+        "erro": "Error: {\"type\":\"error\",\"error\":{\"details\":null,\"type\":\"invalid_request_error\",\"message\":\"Output blocked by content filtering policy\"},\"request_id\":\"req_011Caw7wvtexPKLac9wtJH42\"       }",
+        "foiDividido": true
+      },
+      {
+        "paginas": "pg 16-18",
+        "depth": 3,
+        "stopReason": null,
+        "erro": "Error: {\"type\":\"error\",\"error\":{\"details\":null,\"type\":\"invalid_request_error\",\"message\":\"Output blocked by content filtering policy\"},\"request_id\":\"req_011Caw7yagHLmSWFcea1Dxq4\"}",
+        "foiDividido": true
+      },
+      {
+        "paginas": "pg 16-16",
+        "depth": 4,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      },
+      {
+        "paginas": "pg 17-18",
+        "depth": 4,
+        "stopReason": null,
+        "erro": "Error: {\"type\":\"error\",\"error\":{\"details\":null,\"type\":\"invalid_request_error\",\"message\":\"Output blocked by content filtering policy\"},\"request_id\":\"req_011Caw81Jw3omHS8KRkur4kg\"   }",
+        "foiDividido": true
+      },
+      {
+        "paginas": "pg 17-17",
+        "depth": 5,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      },
+      {
+        "paginas": "pg 18-18",
+        "depth": 5,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      },
+      {
+        "paginas": "pg 19-21",
+        "depth": 3,
+        "stopReason": "end_turn",
+        "erro": null,
+        "foiDividido": false
+      }
+    ]
+  }
+}
