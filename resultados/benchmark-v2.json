@@ -1,0 +1,11 @@
+{
+  "pymupdf": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 0.0177,
+    "sim_levenshtein": 0.6018,
+    "cobertura_palavras": 0.717,
+    "sim_bigramas": 0.6671,
+    "tamanho_relativo": 0.691,
+    "qualidade_excesso": 0.8333
+  }
+}
