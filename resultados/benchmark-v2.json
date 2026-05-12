@@ -43,5 +43,14 @@
     "sim_bigramas": 0.7016,
     "tamanho_relativo": 0.8272,
     "qualidade_excesso": 0.7292
+  },
+  "hibrido-layout-aware": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 12.9572,
+    "sim_levenshtein": 0.6676,
+    "cobertura_palavras": 0.7972,
+    "sim_bigramas": 0.6973,
+    "tamanho_relativo": 0.8129,
+    "qualidade_excesso": 0.8258
   }
 }

@@ -36,6 +36,7 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 from .extractors import (
+    hibrido_layout_aware,
     hibrido_pymupdf_rapidocr,
     paddleocr_full,
     pymupdf_base,
@@ -77,6 +78,7 @@ EXTRATORES: list[tuple[str, Callable[[Path], ResultadoExtracao]]] = [
     (paddleocr_full.NOME_EXTRATOR, paddleocr_full.extrair),
     (tesseract_full.NOME_EXTRATOR, tesseract_full.extrair),
     (hibrido_pymupdf_rapidocr.NOME_EXTRATOR, hibrido_pymupdf_rapidocr.extrair),
+    (hibrido_layout_aware.NOME_EXTRATOR, hibrido_layout_aware.extrair),
 ]
 
 

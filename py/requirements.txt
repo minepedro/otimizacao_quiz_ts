@@ -19,6 +19,11 @@ pymupdf>=1.24
 pdfplumber>=0.11
 pypdfium2>=4.30
 
+# Layout detection — DocLayout-YOLO (mesmo que MinerU usa)
+# Modelo baixado on-demand do HuggingFace (~25MB)
+doclayout-yolo>=0.0.4
+huggingface-hub>=0.20  # ja vem como dep transitivo, explicito por usar diretamente
+
 # OCR — 3 stacks pra poder comparar (mesma estrategia "building blocks" do TS)
 # - PaddleOCR: referencia, multi-idioma incl. PT, suporta GPU CUDA, eh o que MinerU usa
 # - RapidOCR: usa modelos PaddleOCR via ONNX Runtime (sem dep de paddlepaddle, mais leve)
