@@ -53,6 +53,7 @@ resultados/*
 !resultados/benchmark-v2.json
 !resultados/gabaritos_metadata.json
 !resultados/gabaritos_v2_metadata.json
+!resultados/structured-comparison.json
 !resultados/raio-x/
 resultados/raio-x/*
 !resultados/raio-x/.gitkeep

@@ -55,9 +55,10 @@ python-dotenv>=1.0
 tqdm>=4.66
 loguru>=0.7
 
-# Comparacao com Docling/MinerU (instalacoes separadas, opcional)
-# docling>=2.0
-# mineru[all]>=3.0
+# Comparacao 3-vias: Docling + MinerU (adaptadores nativos Python)
+# pesados (~3GB cada incluindo modelos baixados em runtime)
+docling>=2.93
+mineru[pipeline]>=3.0
 
 # Hyperparam search + analise
 pandas>=2.2
