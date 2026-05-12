@@ -1,0 +1,270 @@
+{
+  "Aula 04 - Redes de Computadores": {
+    "nome_arquivo": "Aula 04 - Redes de Computadores.pdf",
+    "num_paginas": 31,
+    "num_chars_md": 11616,
+    "num_blocks": 124,
+    "tokens_input": 53665,
+    "tokens_output": 10191,
+    "custo_usd": 0.3139,
+    "tempo_segundos": 138.02,
+    "num_chunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-31",
+        "depth": 0,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  },
+  "Aula+03+-+Revis_C3_A3o+de+probabilidade+2": {
+    "nome_arquivo": "Aula+03+-+Revis_C3_A3o+de+probabilidade+2.pdf",
+    "num_paginas": 8,
+    "num_chars_md": 5855,
+    "num_blocks": 96,
+    "tokens_input": 16238,
+    "tokens_output": 7437,
+    "custo_usd": 0.1603,
+    "tempo_segundos": 78.69,
+    "num_chunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-8",
+        "depth": 0,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  },
+  "Aula+04+%28resolu%C3%A7%C3%A3o%29": {
+    "nome_arquivo": "Aula+04+%28resolu%C3%A7%C3%A3o%29.pdf",
+    "num_paginas": 4,
+    "num_chars_md": 4268,
+    "num_blocks": 55,
+    "tokens_input": 7945,
+    "tokens_output": 6463,
+    "custo_usd": 0.1208,
+    "tempo_segundos": 79.31,
+    "num_chunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-4",
+        "depth": 0,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  },
+  "Aula+2+-+Economia+como+Ci_C3_AAncia+Social": {
+    "nome_arquivo": "Aula+2+-+Economia+como+Ci_C3_AAncia+Social.pdf",
+    "num_paginas": 14,
+    "num_chars_md": 12309,
+    "num_blocks": 81,
+    "tokens_input": 26777,
+    "tokens_output": 10288,
+    "custo_usd": 0.2347,
+    "tempo_segundos": 152.88,
+    "num_chunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-14",
+        "depth": 0,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  },
+  "EPM 309 - Aula 3 - Introdução ao Sistema Toyota de Produção STP-1": {
+    "nome_arquivo": "EPM 309 - Aula 3 - Introdução ao Sistema Toyota de Produção STP-1.pdf",
+    "num_paginas": 20,
+    "num_chars_md": 6599,
+    "num_blocks": 123,
+    "tokens_input": 34675,
+    "tokens_output": 8743,
+    "custo_usd": 0.2352,
+    "tempo_segundos": 115.15,
+    "num_chunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-20",
+        "depth": 0,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  },
+  "EPM 309 - Aula 6 - PokaYoke": {
+    "nome_arquivo": "EPM 309 - Aula 6 - PokaYoke.pdf",
+    "num_paginas": 12,
+    "num_chars_md": 4794,
+    "num_blocks": 57,
+    "tokens_input": 21477,
+    "tokens_output": 5410,
+    "custo_usd": 0.1456,
+    "tempo_segundos": 74.98,
+    "num_chunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-12",
+        "depth": 0,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  },
+  "EPM309 - Aula 10 - Introdução ao 5S": {
+    "nome_arquivo": "EPM309 - Aula 10 - Introdução ao 5S.pdf",
+    "num_paginas": 72,
+    "num_chars_md": 10176,
+    "num_blocks": 170,
+    "tokens_input": 117411,
+    "tokens_output": 11568,
+    "custo_usd": 0.5258,
+    "tempo_segundos": 182.06,
+    "num_chunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-72",
+        "depth": 0,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  },
+  "Manual Como Criar uma Pesquisa de Mercado": {
+    "nome_arquivo": "Manual Como Criar uma Pesquisa de Mercado.pdf",
+    "num_paginas": 3,
+    "num_chars_md": 3725,
+    "num_blocks": 65,
+    "tokens_input": 7589,
+    "tokens_output": 4246,
+    "custo_usd": 0.0865,
+    "tempo_segundos": 53.22,
+    "num_chunks": 1,
+    "chunks": [
+      {
+        "paginas": "pg 1-3",
+        "depth": 0,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  },
+  "Realismo": {
+    "nome_arquivo": "Realismo.pdf",
+    "num_paginas": 21,
+    "num_chars_md": 9306,
+    "num_blocks": 37,
+    "tokens_input": 38621,
+    "tokens_output": 8979,
+    "custo_usd": 0.2505,
+    "tempo_segundos": 339.0,
+    "num_chunks": 11,
+    "chunks": [
+      {
+        "paginas": "pg 1-21",
+        "depth": 0,
+        "stop_reason": null,
+        "erro": "APIStatusError: {'type': 'error', 'error': {'details': None, 'type': 'invalid_request_error', 'message': 'Output blocked by content filtering policy'}, 'request_id': 'req_011CawwFxkFH2FAgfYbpxYD1'}",
+        "foi_dividido": true
+      },
+      {
+        "paginas": "pg 1-10",
+        "depth": 1,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      },
+      {
+        "paginas": "pg 11-21",
+        "depth": 1,
+        "stop_reason": null,
+        "erro": "APIStatusError: {'type': 'error', 'error': {'details': None, 'type': 'invalid_request_error', 'message': 'Output blocked by content filtering policy'}, 'request_id': 'req_011CawwReNjBSjzbmyjoSixh'}",
+        "foi_dividido": true
+      },
+      {
+        "paginas": "pg 11-15",
+        "depth": 2,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      },
+      {
+        "paginas": "pg 16-21",
+        "depth": 2,
+        "stop_reason": null,
+        "erro": "APIStatusError: {'type': 'error', 'error': {'details': None, 'type': 'invalid_request_error', 'message': 'Output blocked by content filtering policy'}, 'request_id': 'req_011CawwXHRZrQJNoxPo7dN33'}",
+        "foi_dividido": true
+      },
+      {
+        "paginas": "pg 16-18",
+        "depth": 3,
+        "stop_reason": null,
+        "erro": "APIStatusError: {'type': 'error', 'error': {'details': None, 'type': 'invalid_request_error', 'message': 'Output blocked by content filtering policy'}, 'request_id': 'req_011CawwYo25XVm8CsS8DiKU4'}",
+        "foi_dividido": true
+      },
+      {
+        "paginas": "pg 16-16",
+        "depth": 4,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      },
+      {
+        "paginas": "pg 17-18",
+        "depth": 4,
+        "stop_reason": null,
+        "erro": "APIStatusError: {'type': 'error', 'error': {'details': None, 'type': 'invalid_request_error', 'message': 'Output blocked by content filtering policy'}, 'request_id': 'req_011CawwahgfXVEPek2sbT8Co'}",
+        "foi_dividido": true
+      },
+      {
+        "paginas": "pg 17-17",
+        "depth": 5,
+        "stop_reason": null,
+        "erro": "APIStatusError: {'type': 'error', 'error': {'details': None, 'type': 'invalid_request_error', 'message': 'Output blocked by content filtering policy'}, 'request_id': 'req_011Cawwc8XBQWQfZYksmwiRT'}",
+        "foi_dividido": false
+      },
+      {
+        "paginas": "pg 18-18",
+        "depth": 5,
+        "stop_reason": null,
+        "erro": "APIStatusError: {'type': 'error', 'error': {'details': None, 'type': 'invalid_request_error', 'message': 'Output blocked by content filtering policy'}, 'request_id': 'req_011CawwdHgrnZqtSHbehqAMt'}",
+        "foi_dividido": false
+      },
+      {
+        "paginas": "pg 19-21",
+        "depth": 3,
+        "stop_reason": "tool_use",
+        "erro": null,
+        "foi_dividido": false
+      }
+    ],
+    "recusa_detectada": false,
+    "erro_final": null
+  }
+}

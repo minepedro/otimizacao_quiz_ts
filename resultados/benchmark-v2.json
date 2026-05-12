@@ -1,0 +1,47 @@
+{
+  "pymupdf": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 0.0201,
+    "sim_levenshtein": 0.6018,
+    "cobertura_palavras": 0.717,
+    "sim_bigramas": 0.6671,
+    "tamanho_relativo": 0.691,
+    "qualidade_excesso": 0.8333
+  },
+  "rapidocr-full": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 24.2072,
+    "sim_levenshtein": 0.6508,
+    "cobertura_palavras": 0.7657,
+    "sim_bigramas": 0.692,
+    "tamanho_relativo": 0.8201,
+    "qualidade_excesso": 0.7008
+  },
+  "paddleocr-full": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 92.4863,
+    "sim_levenshtein": 0.7154,
+    "cobertura_palavras": 0.8735,
+    "sim_bigramas": 0.7398,
+    "tamanho_relativo": 0.899,
+    "qualidade_excesso": 0.6526
+  },
+  "tesseract-full": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 11.3011,
+    "sim_levenshtein": 0.6482,
+    "cobertura_palavras": 0.7616,
+    "sim_bigramas": 0.669,
+    "tamanho_relativo": 0.7778,
+    "qualidade_excesso": 0.792
+  },
+  "hibrido-pymupdf-rapidocr": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 6.1336,
+    "sim_levenshtein": 0.6995,
+    "cobertura_palavras": 0.8056,
+    "sim_bigramas": 0.7016,
+    "tamanho_relativo": 0.8272,
+    "qualidade_excesso": 0.7292
+  }
+}
