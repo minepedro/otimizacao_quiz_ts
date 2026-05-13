@@ -429,12 +429,12 @@ def _gerar_markdown_pagina(
             # Sprint 9 item 1: TODO titulo vira ## (igual Docling padrao)
             partes.append("## " + texto)
         elif b.type == "list_item":
-            indent = "  " * niveis_lista.get(b.block_id or "", 0)
-            # Sprint 9: se texto tem bullets inline (transformados em \n),
-            # quebra em multiplos items separados (igual Docling)
+            # Sprint 10 item B: listas FLAT (sem indentacao hierarquica)
+            # Igual Docling/MinerU — todos os items no mesmo nivel.
+            # Quebra bullets inline em items separados ainda funciona.
             items = [ln.strip() for ln in texto.split("\n") if ln.strip()]
             for item in items:
-                partes.append(f"{indent}- {item}")
+                partes.append(f"- {item}")
         elif b.type == "table":
             # Item 5 desativado: image_path so no JSON pra nao poluir qexc
             partes.append(f"```\n{texto}\n```")
@@ -486,6 +486,18 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
 
     try:
         num_paginas = doc.page_count
+
+        # Sprint 10 item A: pre-calcula font_mediano DO DOCUMENTO inteiro
+        # (em vez de por pagina) — usado pra promover blocos com font grande
+        # em "title" mesmo quando YOLO nao detectou.
+        # Resolve casos como Realismo onde YOLO falha em detectar titulos sutis.
+        todos_fonts: list[float] = []
+        for p in doc:
+            blocos_p = _extrair_blocos_vetorial(p)
+            todos_fonts.extend(b["font_size"] for b in blocos_p if b.get("font_size"))
+        font_mediano_doc = median(todos_fonts) if todos_fonts else 12.0
+        FONT_MULT_TITLE = 1.4   # threshold pra promover pra title
+
         for page_idx, page in enumerate(doc):
             page_width_pt = page.rect.width
             page_height_pt = page.rect.height
@@ -556,6 +568,19 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
                 # eh provavel paragraph sobreposto a regiao figure — reclassifica
                 if tipo == "image" and len(b["text"]) > 100:
                     tipo = "paragraph"
+
+                # Sprint 10 item A: PROMOTE pra title via font_size do DOCUMENTO
+                # Se YOLO nao classificou como title MAS o font eh grande
+                # (>= 1.4x mediano do documento) E o texto eh curto, eh provavel
+                # titulo que YOLO perdeu (caso Realismo).
+                # Texto curto eh requisito porque parágrafos longos com fonte
+                # grande sao raros e geralmente nao sao títulos.
+                if tipo not in ("title", "header", "footer", "page_number"):
+                    if (
+                        b["font_size"] >= font_mediano_doc * FONT_MULT_TITLE
+                        and len(b["text"]) < 200
+                    ):
+                        tipo = "title"
 
                 # Sprint 9 item 1: TODO titulo vira level=1 (markdown ##),
                 # mesma estrategia do Docling. Removida heuristica de
