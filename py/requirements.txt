@@ -14,15 +14,29 @@
 #     torch torchvision --index-url https://download.pytorch.org/whl/cu128
 # ============================================================
 
-# Extracao base
+# Extracao base — pdf_backend usa pypdfium2 (Apache 2.0) + pdfplumber (MIT)
+# em vez de pymupdf (AGPL) pra permitir embarcar no tutor-ai sem
+# contaminar o produto com licenca AGPL.
+# pymupdf mantido como dep opcional pra benchmark/comparacao.
 pymupdf>=1.24
 pdfplumber>=0.11
 pypdfium2>=4.30
 
-# OCR
+# Layout detection — DocLayout-YOLO (mesmo que MinerU usa)
+# Modelo baixado on-demand do HuggingFace (~25MB)
+doclayout-yolo>=0.0.4
+huggingface-hub>=0.20  # ja vem como dep transitivo, explicito por usar diretamente
+
+# OCR — 3 stacks pra poder comparar (mesma estrategia "building blocks" do TS)
+# - PaddleOCR: referencia, multi-idioma incl. PT, suporta GPU CUDA, eh o que MinerU usa
+# - RapidOCR: usa modelos PaddleOCR via ONNX Runtime (sem dep de paddlepaddle, mais leve)
+# - pytesseract: bind pro tesseract.exe (precisa do binario do sistema instalado separado)
+paddlepaddle>=2.6        # backend do PaddleOCR (CPU; pra GPU usar paddlepaddle-gpu)
 paddleocr>=2.8
-# tesseract via pytesseract eh fallback opcional (precisa do binario do sistema)
-# pytesseract>=0.3
+rapidocr-onnxruntime>=1.3
+pytesseract>=0.3
+# Pra usar pytesseract precisa do binario tesseract.exe no PATH:
+#   winget install --id UB-Mannheim.TesseractOCR
 
 # Imagem / preprocessamento
 pillow>=10.0
@@ -31,6 +45,10 @@ numpy>=1.26
 
 # Validacao / schemas
 pydantic>=2.7
+rapidfuzz>=3.0          # Levenshtein rapido pras metricas
+
+# Manipulacao de PDF (pra fatiar nos chunks do gabarito v2)
+pypdf>=4.0
 
 # API Anthropic (gabarito v2)
 anthropic>=0.40
@@ -40,9 +58,17 @@ python-dotenv>=1.0
 tqdm>=4.66
 loguru>=0.7
 
-# Comparacao com Docling/MinerU (instalacoes separadas, opcional)
-# docling>=2.0
-# mineru[all]>=3.0
+# Comparacao 3-vias: Docling + MinerU (adaptadores nativos Python)
+# pesados (~3GB cada incluindo modelos baixados em runtime)
+docling>=2.93
+mineru[pipeline]>=3.0
+
+# Sprint 8 - reconhecedores especializados
+# Tabelas: Microsoft Table Transformer (huggingface)
+timm>=0.5.4
+# Formulas: pix2tex (LaTeX-OCR) — funciona bem em formulas DIGITADAS,
+# nao em manuscrito (limitacao do modelo)
+pix2tex>=0.1.4
 
 # Hyperparam search + analise
 pandas>=2.2
