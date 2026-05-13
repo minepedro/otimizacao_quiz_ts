@@ -1,7 +1,7 @@
 {
   "best_0": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 12.0983,
+    "tempo_seg_medio": 12.4577,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.2,
     "sim_levenshtein": 0.6858,
@@ -12,7 +12,7 @@
   },
   "best_02": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.5337,
+    "tempo_seg_medio": 5.7764,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.0,
     "sim_levenshtein": 0.6856,
@@ -23,7 +23,7 @@
   },
   "greedy_05": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.85,
+    "tempo_seg_medio": 5.7678,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 4.9,
     "sim_levenshtein": 0.6858,
@@ -34,7 +34,7 @@
   },
   "confidence": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.93,
+    "tempo_seg_medio": 5.7837,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.0,
     "sim_levenshtein": 0.6855,
@@ -45,7 +45,7 @@
   },
   "score_composto": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 6.1378,
+    "tempo_seg_medio": 5.8221,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.1,
     "sim_levenshtein": 0.6864,
@@ -53,5 +53,27 @@
     "sim_bigramas": 0.7044,
     "tamanho_relativo": 0.8176,
     "qualidade_excesso": 0.8055
+  },
+  "anchor": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.774,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 4.7,
+    "sim_levenshtein": 0.6902,
+    "cobertura_palavras": 0.7892,
+    "sim_bigramas": 0.7051,
+    "tamanho_relativo": 0.8247,
+    "qualidade_excesso": 0.8055
+  },
+  "rtree_02": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.7874,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.0,
+    "sim_levenshtein": 0.6856,
+    "cobertura_palavras": 0.7848,
+    "sim_bigramas": 0.7032,
+    "tamanho_relativo": 0.8183,
+    "qualidade_excesso": 0.7801
   }
 }

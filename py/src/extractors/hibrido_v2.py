@@ -492,6 +492,130 @@ def matcher_score_composto(bloco: dict, regioes: list[RegiaoLayout], img_h: int)
     return None
 
 
+# ============================================================
+# Anchor-based + propagacao (#7)
+# ============================================================
+# Algoritmo:
+#  1. Pra cada regiao YOLO (ordenada por confidence DESC):
+#     - Acha bloco vetorial mais sobreposto = "anchor"
+#     - Se IoS(anchor) >= 0.5: anchor casa com a regiao
+#     - Vizinhos do anchor (mesma faixa Y, com qualquer overlap): herdam tipo
+#  2. Blocos sem atribuicao apos todas as regioes: orphan (paragraph)
+#
+# Implementacao: pre-processa todos os blocos antes do loop, atribui
+# direto nos dicts dos blocos via campo "_anchor_regiao".
+
+ANCHOR_IOS_MIN = 0.5
+ANCHOR_VIZINHANCA_MULTIPLO = 2.0  # ate 2x altura do anchor pra ser vizinho
+
+
+def pre_process_anchor(blocos: list[dict], regioes: list[RegiaoLayout]) -> None:
+    """Pre-processa atribuicao via anchor + propagacao.
+
+    Modifica os dicts de blocos in-place adicionando campo "_anchor_regiao".
+    O matcher_anchor depois so consulta esse campo.
+    """
+    for b in blocos:
+        b["_anchor_regiao"] = None
+
+    # Ordena regioes por confidence decrescente (mais confiantes primeiro)
+    regioes_sorted = sorted(regioes, key=lambda r: -r.confidence)
+
+    for regiao in regioes_sorted:
+        # Acha melhor anchor que ainda nao foi atribuido
+        candidatos = [
+            (b, _intersecao_relativa(b["bbox_img"], regiao.bbox))
+            for b in blocos
+            if b["_anchor_regiao"] is None
+        ]
+        if not candidatos:
+            continue
+        anchor, ios_anchor = max(candidatos, key=lambda x: x[1])
+        if ios_anchor < ANCHOR_IOS_MIN:
+            continue  # nenhum bloco bate forte com essa regiao
+        anchor["_anchor_regiao"] = regiao
+
+        # Propaga pra vizinhos (mesma faixa Y do anchor, com qualquer overlap)
+        ay1, ay2 = anchor["bbox_img"][1], anchor["bbox_img"][3]
+        anchor_h = max(ay2 - ay1, 1.0)
+        ay_centro = (ay1 + ay2) / 2
+
+        for b in blocos:
+            if b["_anchor_regiao"] is not None:
+                continue
+            b_y_centro = (b["bbox_img"][1] + b["bbox_img"][3]) / 2
+            # Vizinho se esta verticalmente proximo do anchor
+            if abs(b_y_centro - ay_centro) > anchor_h * ANCHOR_VIZINHANCA_MULTIPLO:
+                continue
+            # E precisa ter algum overlap com a regiao (mesmo que pequeno)
+            if _intersecao_relativa(b["bbox_img"], regiao.bbox) > 0:
+                b["_anchor_regiao"] = regiao
+
+
+def matcher_anchor(bloco: dict, regioes: list[RegiaoLayout], img_h: int) -> "RegiaoLayout | None":
+    """Matcher anchor: so consulta o que pre_process_anchor ja decidiu."""
+    return bloco.get("_anchor_regiao")
+
+
+# ============================================================
+# R-tree (#5) — otimizacao de busca espacial
+# ============================================================
+# Usa rtree pra reduzir o loop O(N*M) pra O(N*log M). Mesma logica
+# do matcher_best_02 mas com indice espacial pra filtrar candidatos.
+
+_RTREE_INDEX = None  # populated by pre_process_rtree
+
+
+def pre_process_rtree(blocos: list[dict], regioes: list[RegiaoLayout]) -> None:
+    """Constroi indice R-tree das regioes pra busca rapida."""
+    from rtree import index
+    global _RTREE_INDEX
+    _RTREE_INDEX = index.Index()
+    for i, r in enumerate(regioes):
+        # rtree bbox: (minx, miny, maxx, maxy)
+        _RTREE_INDEX.insert(i, (r.bbox[0], r.bbox[1], r.bbox[2], r.bbox[3]))
+
+
+def matcher_rtree_02(bloco: dict, regioes: list[RegiaoLayout], img_h: int) -> "RegiaoLayout | None":
+    """Best match com threshold 0.2 + busca espacial via R-tree."""
+    global _RTREE_INDEX
+    if _RTREE_INDEX is None:
+        # Fallback: degrade pra O(N*M)
+        return matcher_best_02(bloco, regioes, img_h)
+    # Pega so regioes que sobrepoem espacialmente com o bbox do bloco
+    bb = bloco["bbox_img"]
+    candidatos_idx = list(_RTREE_INDEX.intersection((bb[0], bb[1], bb[2], bb[3])))
+    if not candidatos_idx:
+        return None
+    melhor = None
+    melhor_overlap = 0.0
+    for i in candidatos_idx:
+        r = regioes[i]
+        overlap = _intersecao_relativa(bb, r.bbox)
+        if overlap > melhor_overlap:
+            melhor_overlap = overlap
+            melhor = r
+    if melhor and melhor_overlap >= 0.20:
+        return melhor
+    return None
+
+
+# ============================================================
+# Registry e tabela de pre-processamento
+# ============================================================
+
+# Funcoes de pre-processamento por matcher (None = nao precisa)
+PreProcessFn = Callable[[list[dict], list[RegiaoLayout]], None]
+PRE_PROCESS: dict[str, "PreProcessFn | None"] = {
+    "best_0": None,
+    "best_02": None,
+    "greedy_05": None,
+    "confidence": None,
+    "score_composto": None,
+    "anchor": pre_process_anchor,
+    "rtree_02": pre_process_rtree,
+}
+
 # Registry: nome -> (matcher_fn, descricao)
 MATCHERS: dict[str, tuple[MatcherFn, str]] = {
     "best_0": (matcher_best_0, "Best match SEM threshold (atual hibrido_layout_aware)"),
@@ -499,6 +623,8 @@ MATCHERS: dict[str, tuple[MatcherFn, str]] = {
     "greedy_05": (matcher_greedy_05, "Best match com threshold IoS 0.5 (MinerU-style)"),
     "confidence": (matcher_confidence_aware, "Threshold dinamico por YOLO confidence (0.10 / 0.30 / 0.50)"),
     "score_composto": (matcher_score_composto, "Score IoS + font_size + regex bullet + posicao Y (+penalidades)"),
+    "anchor": (matcher_anchor, "Anchor + propagacao: anchor com IoS>=0.5 + vizinhos herdam tipo"),
+    "rtree_02": (matcher_rtree_02, "Best match threshold 0.2 + busca espacial R-tree"),
 }
 
 
@@ -515,6 +641,7 @@ def _extrair_com_matcher(
     if matcher_name not in MATCHERS:
         raise ValueError(f"Matcher desconhecido: {matcher_name}. Opcoes: {list(MATCHERS)}")
     matcher_fn, _ = MATCHERS[matcher_name]
+    pre_process_fn = PRE_PROCESS.get(matcher_name)
     nome_extrator = f"hibrido-v2-{matcher_name}"
 
     inicio = time.perf_counter()
@@ -568,6 +695,10 @@ def _extrair_com_matcher(
             # Anota mediano em cada bloco pra matchers que precisam (score_composto)
             for b in blocos_vetorial:
                 b["_font_mediano_pagina"] = font_size_mediano
+
+            # Pre-processamento opcional (anchor, rtree)
+            if pre_process_fn is not None:
+                pre_process_fn(blocos_vetorial, regioes)
 
             blocos_pagina: list[BlocoExtraido] = []
             blocos_list_item_da_pagina: list[BlocoExtraido] = []
@@ -721,3 +852,11 @@ def extrair_confidence(caminho_pdf: str | Path) -> ResultadoExtracao:
 
 def extrair_score_composto(caminho_pdf: str | Path) -> ResultadoExtracao:
     return _extrair_com_matcher(caminho_pdf, "score_composto")
+
+
+def extrair_anchor(caminho_pdf: str | Path) -> ResultadoExtracao:
+    return _extrair_com_matcher(caminho_pdf, "anchor")
+
+
+def extrair_rtree_02(caminho_pdf: str | Path) -> ResultadoExtracao:
+    return _extrair_com_matcher(caminho_pdf, "rtree_02")
