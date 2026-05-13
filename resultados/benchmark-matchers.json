@@ -1,0 +1,101 @@
+{
+  "best_0": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 12.6067,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.2,
+    "sim_levenshtein": 0.6858,
+    "cobertura_palavras": 0.7843,
+    "sim_bigramas": 0.704,
+    "tamanho_relativo": 0.8179,
+    "qualidade_excesso": 0.7801
+  },
+  "best_02": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.8899,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.0,
+    "sim_levenshtein": 0.6856,
+    "cobertura_palavras": 0.7848,
+    "sim_bigramas": 0.7032,
+    "tamanho_relativo": 0.8183,
+    "qualidade_excesso": 0.7801
+  },
+  "greedy_05": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.8509,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 4.9,
+    "sim_levenshtein": 0.6858,
+    "cobertura_palavras": 0.7848,
+    "sim_bigramas": 0.7038,
+    "tamanho_relativo": 0.8185,
+    "qualidade_excesso": 0.8055
+  },
+  "confidence": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.8891,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.0,
+    "sim_levenshtein": 0.6855,
+    "cobertura_palavras": 0.7848,
+    "sim_bigramas": 0.7044,
+    "tamanho_relativo": 0.8184,
+    "qualidade_excesso": 0.8055
+  },
+  "score_composto": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.8209,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.1,
+    "sim_levenshtein": 0.6864,
+    "cobertura_palavras": 0.7854,
+    "sim_bigramas": 0.7044,
+    "tamanho_relativo": 0.8176,
+    "qualidade_excesso": 0.8055
+  },
+  "anchor": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.8777,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 4.7,
+    "sim_levenshtein": 0.6902,
+    "cobertura_palavras": 0.7892,
+    "sim_bigramas": 0.7051,
+    "tamanho_relativo": 0.8247,
+    "qualidade_excesso": 0.8055
+  },
+  "rtree_02": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.8289,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.0,
+    "sim_levenshtein": 0.6856,
+    "cobertura_palavras": 0.7848,
+    "sim_bigramas": 0.7032,
+    "tamanho_relativo": 0.8183,
+    "qualidade_excesso": 0.7801
+  },
+  "two_pass": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.8118,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.1,
+    "sim_levenshtein": 0.6715,
+    "cobertura_palavras": 0.7713,
+    "sim_bigramas": 0.7022,
+    "tamanho_relativo": 0.8038,
+    "qualidade_excesso": 0.7801
+  },
+  "em": {
+    "n_pdfs_sem_erro": 4,
+    "tempo_seg_medio": 3.1873,
+    "num_blocks_medio": 70.2,
+    "num_tipos_medio": 3.8,
+    "sim_levenshtein": 0.6986,
+    "cobertura_palavras": 0.7723,
+    "sim_bigramas": 0.6839,
+    "tamanho_relativo": 0.8164,
+    "qualidade_excesso": 0.6924
+  }
+}
