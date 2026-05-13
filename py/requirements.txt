@@ -60,6 +60,13 @@ loguru>=0.7
 docling>=2.93
 mineru[pipeline]>=3.0
 
+# Sprint 8 - reconhecedores especializados
+# Tabelas: Microsoft Table Transformer (huggingface)
+timm>=0.5.4
+# Formulas: pix2tex (LaTeX-OCR) — funciona bem em formulas DIGITADAS,
+# nao em manuscrito (limitacao do modelo)
+pix2tex>=0.1.4
+
 # Hyperparam search + analise
 pandas>=2.2
 matplotlib>=3.9

@@ -547,8 +547,23 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
                             pass
                         continue
 
-                    # OCR + dedup de linhas duplicadas (efeito sombra)
-                    texto_ocr = _deduplica_linhas_consecutivas(_ocr_recorte_cached(recorte, h))
+                    # Sprint 8 itens 5 e 6: tabela/formula usam reconhecedor
+                    # especializado em vez de OCR cru. Cai pra OCR como fallback
+                    # se o reconhecedor falhar (devolve string vazia).
+                    if tipo_regiao == "table":
+                        from . import table_recognizer
+                        texto_ocr = table_recognizer.reconhecer_tabela(recorte)
+                        if not texto_ocr:
+                            # Fallback: OCR cru
+                            texto_ocr = _deduplica_linhas_consecutivas(_ocr_recorte_cached(recorte, h))
+                    elif tipo_regiao == "formula":
+                        from . import formula_recognizer
+                        texto_ocr = formula_recognizer.reconhecer_formula(recorte)
+                        if not texto_ocr:
+                            texto_ocr = _deduplica_linhas_consecutivas(_ocr_recorte_cached(recorte, h))
+                    else:
+                        # Image: OCR cru padrao
+                        texto_ocr = _deduplica_linhas_consecutivas(_ocr_recorte_cached(recorte, h))
 
                     # Sprint 8 item 4: SEMPRE salva crop pra image/formula/table
                     # (paridade RAG com MinerU — usuario pode linkar de volta a figura)
