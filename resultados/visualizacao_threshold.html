@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Threshold IoS — Atual (0%) vs Proposto (20%)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #f5f5f7;
+      color: #222;
+      line-height: 1.5;
+    }
+    h1 { color: #111; border-bottom: 3px solid #007acc; padding-bottom: 8px; }
+    h2 { color: #007acc; margin-top: 32px; }
+    h3 { color: #444; margin-top: 24px; }
+    .legend {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+    .legend-box { width: 20px; height: 20px; border: 2px solid; border-radius: 3px; }
+    .yolo { border-color: #d63333; background: rgba(214, 51, 51, 0.1); }
+    .pymupdf { border-color: #2b8cbe; background: rgba(43, 140, 190, 0.15); }
+    .case {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 16px;
+    }
+    .panel {
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .panel-atual { border-color: #d63333; background: #fff5f5; }
+    .panel-proposto { border-color: #2ca02c; background: #f0fdf0; }
+    .panel-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 8px;
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+    .panel-atual .panel-title { background: #fff; color: #b91c1c; }
+    .panel-proposto .panel-title { background: #fff; color: #15803d; }
+    svg { background: #fafafa; border: 1px solid #ccc; display: block; margin: 0 auto; }
+    .yolo-box { fill: rgba(214, 51, 51, 0.08); stroke: #d63333; stroke-width: 2; }
+    .pymupdf-box { fill: rgba(43, 140, 190, 0.18); stroke: #2b8cbe; stroke-width: 2; stroke-dasharray: 4 2; }
+    .text-label { font-family: monospace; font-size: 11px; }
+    .yolo-label { fill: #d63333; font-weight: 700; }
+    .pymupdf-label { fill: #2b8cbe; font-weight: 700; }
+    .arrow { fill: none; stroke: #555; stroke-width: 2; marker-end: url(#arr); }
+    .result-box {
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .result-ok { background: #dcfce7; color: #166534; border-left: 4px solid #16a34a; }
+    .result-fail { background: #fee2e2; color: #991b1b; border-left: 4px solid #dc2626; }
+    .result-ok::before { content: "OK  "; font-weight: 700; }
+    .result-fail::before { content: "ERRO  "; font-weight: 700; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+    th { background: #007acc; color: white; font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .formula {
+      background: #f6f8fa;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-family: "SF Mono", Consolas, monospace;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+    .ios-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-family: monospace;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+    .ios-low { background: #fef3c7; color: #92400e; }
+    .ios-mid { background: #dbeafe; color: #1e40af; }
+    .ios-high { background: #dcfce7; color: #166534; }
+    .summary {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      border-left: 4px solid #007acc;
+      padding: 16px 20px;
+      border-radius: 4px;
+      margin: 24px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Threshold IoS - Atual (0%) vs Proposto (20%)</h1>
+
+  <div class="legend">
+    <strong>Legenda:</strong>
+    <div class="legend-item">
+      <div class="legend-box yolo"></div>
+      <span>Regiao detectada pelo YOLO (com tipo: title, paragraph, etc)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box pymupdf"></div>
+      <span>Bloco vetorial do PyMuPDF (com texto literal)</span>
+    </div>
+  </div>
+
+  <div class="summary">
+    <strong>Conceito basico:</strong> pra cada bloco vetorial do PyMuPDF, calculamos a IoS
+    (Intersection over Self = area_da_intersecao / area_do_bloco) com cada regiao do YOLO.
+    A regiao com MAIOR IoS "ganha" o bloco — bloco recebe o tipo dela.
+    A diferenca entre <code>HOJE</code> e <code>PROPOSTO</code> e
+    <strong>quao baixa pode ser essa IoS pra ainda contar como casamento</strong>.
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CASO 1: Match perfeito -->
+  <!-- ============================================================ -->
+  <div class="case">
+    <h2>Caso 1 — Match perfeito (IoS 95%)</h2>
+    <p>Bloco vetorial esta quase totalmente dentro da regiao YOLO. Os 2 sistemas (atual e proposto) acertam.</p>
+
+    <div class="case-grid">
+
+      <div class="panel panel-atual">
+        <div class="panel-title">HOJE (threshold 0%)</div>
+        <svg viewBox="0 0 400 220" width="100%" height="220">
+          <rect class="yolo-box" x="40" y="30" width="320" height="60" />
+          <text class="text-label yolo-label" x="50" y="22">YOLO: title (40,30,360,90)</text>
+          <rect class="pymupdf-box" x="55" y="40" width="290" height="40" />
+          <text class="text-label pymupdf-label" x="65" y="65">"Aula 04 - Redes"</text>
+          <text class="text-label pymupdf-label" x="65" y="100">PyMuPDF: (55,40,345,80)</text>
+          <text class="text-label" x="40" y="135">IoS = area_intersect / area_bloco</text>
+          <text class="text-label" x="40" y="155">    = (290 x 40) / (290 x 40)</text>
+          <text class="text-label" x="40" y="175">    = 1.00 (100%)</text>
+          <text class="text-label" x="40" y="200" style="font-weight: 700;">1.00 &gt; 0% threshold = CASA</text>
+        </svg>
+        <div class="result-box result-ok">tipo = "title", texto = "Aula 04 - Redes"</div>
+      </div>
+
+      <div class="panel panel-proposto">
+        <div class="panel-title">PROPOSTO (threshold 20%)</div>
+        <svg viewBox="0 0 400 220" width="100%" height="220">
+          <rect class="yolo-box" x="40" y="30" width="320" height="60" />
+          <text class="text-label yolo-label" x="50" y="22">YOLO: title (40,30,360,90)</text>
+          <rect class="pymupdf-box" x="55" y="40" width="290" height="40" />
+          <text class="text-label pymupdf-label" x="65" y="65">"Aula 04 - Redes"</text>
+          <text class="text-label pymupdf-label" x="65" y="100">PyMuPDF: (55,40,345,80)</text>
+          <text class="text-label" x="40" y="135">IoS = 1.00 (100%)</text>
+          <text class="text-label" x="40" y="200" style="font-weight: 700;">1.00 &gt;= 0.20 threshold = CASA</text>
+        </svg>
+        <div class="result-box result-ok">tipo = "title", texto = "Aula 04 - Redes"</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CASO 2: Match de raspao -->
+  <!-- ============================================================ -->
+  <div class="case">
+    <h2>Caso 2 — Match de raspao (IoS 5%) — AQUI ESTA O PROBLEMA</h2>
+    <p>O bloco vetorial "Exercicio 2" esta na maior parte FORA de qualquer regiao do YOLO.
+       Mas toca 5% da regiao "title" (que estendeu um pouco demais). Esse e o caso onde
+       <code>HOJE</code> erra e <code>PROPOSTO</code> acerta.</p>
+
+    <div class="case-grid">
+
+      <div class="panel panel-atual">
+        <div class="panel-title">HOJE (threshold 0%)</div>
+        <svg viewBox="0 0 400 280" width="100%" height="280">
+          <rect class="yolo-box" x="40" y="30" width="320" height="80" />
+          <text class="text-label yolo-label" x="50" y="22">YOLO: title (estendeu ate y=110)</text>
+          <rect class="pymupdf-box" x="55" y="100" width="290" height="50" />
+          <text class="text-label pymupdf-label" x="65" y="125">"Exercicio 2"</text>
+          <text class="text-label pymupdf-label" x="65" y="170">PyMuPDF: (55,100,345,150)</text>
+          <text class="text-label" x="40" y="200">IoS com "title":</text>
+          <text class="text-label" x="40" y="220">  intersect: y=100..110 = 290 x 10 = 2900</text>
+          <text class="text-label" x="40" y="240">  area bloco: 290 x 50 = 14500</text>
+          <text class="text-label" x="40" y="260" style="font-weight: 700;">  IoS = 0.20</text>
+        </svg>
+        <div class="result-box result-fail">tipo = "title" (errado!), texto = "Exercicio 2"<br>(deveria ser paragraph ou list_item)</div>
+      </div>
+
+      <div class="panel panel-proposto">
+        <div class="panel-title">PROPOSTO (threshold 20%)</div>
+        <svg viewBox="0 0 400 280" width="100%" height="280">
+          <rect class="yolo-box" x="40" y="30" width="320" height="80" />
+          <text class="text-label yolo-label" x="50" y="22">YOLO: title (estendeu ate y=110)</text>
+          <rect class="pymupdf-box" x="55" y="100" width="290" height="50" />
+          <text class="text-label pymupdf-label" x="65" y="125">"Exercicio 2"</text>
+          <text class="text-label pymupdf-label" x="65" y="170">PyMuPDF: (55,100,345,150)</text>
+          <text class="text-label" x="40" y="200">IoS com "title": 0.20</text>
+          <text class="text-label" x="40" y="240" style="font-weight: 700;">0.20 NAO &gt; 0.20 threshold</text>
+          <text class="text-label" x="40" y="260" style="font-weight: 700;">→ NAO casa, vira "paragraph"</text>
+        </svg>
+        <div class="result-box result-ok">tipo = "paragraph" (neutro), texto = "Exercicio 2"<br>(seguro, nao classifica errado)</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CASO 3: Caso real do Aula 03 -->
+  <!-- ============================================================ -->
+  <div class="case">
+    <h2>Caso 3 — Caso real do Aula 03 Probabilidade</h2>
+    <p>YOLO desenhou bbox da regiao "title" um pouco GRANDE demais (incluindo espaco em branco).
+       O bloco "- Diagrama de Venn" toca de raspao essa bbox.</p>
+
+    <div class="case-grid">
+
+      <div class="panel panel-atual">
+        <div class="panel-title">HOJE (threshold 0%) - resultado real do Aula 03</div>
+        <svg viewBox="0 0 400 320" width="100%" height="320">
+          <rect class="yolo-box" x="40" y="20" width="320" height="120" />
+          <text class="text-label yolo-label" x="50" y="14">YOLO: title</text>
+          <rect class="pymupdf-box" x="55" y="40" width="280" height="30" />
+          <text class="text-label pymupdf-label" x="65" y="60">"Estrategias uteis"</text>
+          <rect class="pymupdf-box" x="55" y="135" width="280" height="30" />
+          <text class="text-label pymupdf-label" x="65" y="155">"- Diagrama de Venn"</text>
+          <text class="text-label" x="40" y="195">- "Estrategias..." IoS = 0.95</text>
+          <text class="text-label ios-high" x="40" y="215" style="font-weight: 700;">  → casa com "title" CORRETO</text>
+          <text class="text-label" x="40" y="245">- "- Diagrama de Venn" IoS = 0.10</text>
+          <text class="text-label ios-low" x="40" y="265" style="font-weight: 700;">  0.10 &gt; 0% → casa com "title" ERRADO</text>
+          <text class="text-label" x="40" y="295">  (deveria ser list_item)</text>
+        </svg>
+        <div class="result-box result-fail">2 blocos como "title" (1 correto, 1 errado)<br>Markdown: # Estrategias uteis<br># - Diagrama de Venn (errado!)</div>
+      </div>
+
+      <div class="panel panel-proposto">
+        <div class="panel-title">PROPOSTO (threshold 20%)</div>
+        <svg viewBox="0 0 400 320" width="100%" height="320">
+          <rect class="yolo-box" x="40" y="20" width="320" height="120" />
+          <text class="text-label yolo-label" x="50" y="14">YOLO: title</text>
+          <rect class="pymupdf-box" x="55" y="40" width="280" height="30" />
+          <text class="text-label pymupdf-label" x="65" y="60">"Estrategias uteis"</text>
+          <rect class="pymupdf-box" x="55" y="135" width="280" height="30" />
+          <text class="text-label pymupdf-label" x="65" y="155">"- Diagrama de Venn"</text>
+          <text class="text-label" x="40" y="195">- "Estrategias..." IoS = 0.95</text>
+          <text class="text-label ios-high" x="40" y="215" style="font-weight: 700;">  → casa com "title" CORRETO</text>
+          <text class="text-label" x="40" y="245">- "- Diagrama de Venn" IoS = 0.10</text>
+          <text class="text-label ios-low" x="40" y="265" style="font-weight: 700;">  0.10 &lt; 0.20 → NAO casa</text>
+          <text class="text-label" x="40" y="295">  → vira paragraph, regex detecta list_item</text>
+        </svg>
+        <div class="result-box result-ok">"Estrategias uteis" = title<br>"- Diagrama de Venn" = list_item<br>Markdown: # Estrategias uteis<br>- Diagrama de Venn (correto!)</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CASO 4: Match disputado -->
+  <!-- ============================================================ -->
+  <div class="case">
+    <h2>Caso 4 — Match disputado (best match decide)</h2>
+    <p>Bloco vetorial sobrepoe 2 regioes. <strong>Best match</strong> escolhe a com maior IoS.
+       Regra igual nos 2 panels — threshold so impede que matches de raspao passem.</p>
+
+    <div class="case-grid">
+
+      <div class="panel panel-atual">
+        <div class="panel-title">HOJE (threshold 0%)</div>
+        <svg viewBox="0 0 400 240" width="100%" height="240">
+          <rect class="yolo-box" x="20" y="20" width="180" height="80" />
+          <text class="text-label yolo-label" x="30" y="14">YOLO: title</text>
+          <rect class="yolo-box" x="200" y="20" width="180" height="80" />
+          <text class="text-label yolo-label" x="210" y="14">YOLO: plain_text</text>
+          <rect class="pymupdf-box" x="60" y="40" width="280" height="40" />
+          <text class="text-label pymupdf-label" x="70" y="65">"Estrategias uteis para"</text>
+          <text class="text-label pymupdf-label" x="70" y="100">PyMuPDF cobre AS DUAS regioes</text>
+          <text class="text-label" x="20" y="140">IoS com "title": 280/(280) = 0.50</text>
+          <text class="text-label" x="20" y="160">IoS com "plain_text": 140/(280) = 0.50</text>
+          <text class="text-label" x="20" y="190">EMPATE → fica com PRIMEIRA</text>
+          <text class="text-label ios-mid" x="20" y="220" style="font-weight: 700;">→ "title" (escolha duvidosa)</text>
+        </svg>
+        <div class="result-box result-ok">tipo = "title" (decisao arbitraria mas funciona)</div>
+      </div>
+
+      <div class="panel panel-proposto">
+        <div class="panel-title">PROPOSTO (threshold 20%)</div>
+        <svg viewBox="0 0 400 240" width="100%" height="240">
+          <rect class="yolo-box" x="20" y="20" width="180" height="80" />
+          <text class="text-label yolo-label" x="30" y="14">YOLO: title</text>
+          <rect class="yolo-box" x="200" y="20" width="180" height="80" />
+          <text class="text-label yolo-label" x="210" y="14">YOLO: plain_text</text>
+          <rect class="pymupdf-box" x="60" y="40" width="280" height="40" />
+          <text class="text-label pymupdf-label" x="70" y="65">"Estrategias uteis para"</text>
+          <text class="text-label" x="20" y="140">IoS com "title": 0.50</text>
+          <text class="text-label" x="20" y="160">IoS com "plain_text": 0.50</text>
+          <text class="text-label" x="20" y="190">AMBOS &gt; 0.20 threshold</text>
+          <text class="text-label ios-mid" x="20" y="220" style="font-weight: 700;">→ "title" (mesmo resultado)</text>
+        </svg>
+        <div class="result-box result-ok">tipo = "title" (mesmo)</div>
+      </div>
+
+    </div>
+    <p style="font-size: 14px; color: #666; margin-top: 12px;">
+      <strong>Conclusao:</strong> threshold 20% NAO afeta este caso (ambos os matches passam).
+      So afeta o caso 2/3 (matches abaixo de 20%).
+    </p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TABELA RESUMO -->
+  <!-- ============================================================ -->
+  <h2>Resumo dos 4 casos</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Caso</th>
+        <th>IoS</th>
+        <th>HOJE (threshold 0%)</th>
+        <th>PROPOSTO (threshold 20%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Match perfeito</strong></td>
+        <td><span class="ios-badge ios-high">95%</span></td>
+        <td>casa, tipo correto</td>
+        <td>casa, tipo correto (igual)</td>
+      </tr>
+      <tr>
+        <td><strong>2. Raspao</strong></td>
+        <td><span class="ios-badge ios-low">5%</span></td>
+        <td>casa, tipo ERRADO</td>
+        <td>nao casa, vira "paragraph" (seguro)</td>
+      </tr>
+      <tr>
+        <td><strong>3. Aula 03 (real)</strong></td>
+        <td><span class="ios-badge ios-low">10%</span></td>
+        <td>"- Diagrama de Venn" vira "title" ERRADO</td>
+        <td>"- Diagrama de Venn" vira "list_item" (correto)</td>
+      </tr>
+      <tr>
+        <td><strong>4. Disputado</strong></td>
+        <td><span class="ios-badge ios-mid">50% / 50%</span></td>
+        <td>best match decide (mesma escolha)</td>
+        <td>best match decide (mesma escolha)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="summary">
+    <strong>Por que 20% e nao 30% ou 50%?</strong><br>
+    20% e o valor que o Docling usa em producao (validado em milhares de PDFs).
+    MinerU usa 50% mas eh muito agressivo (perde texto orphan). 0% (nosso atual) eh permissivo demais.
+    <br><br>
+    <strong>Impacto esperado:</strong>
+    <ul>
+      <li>Aula 03 Probabilidade: qexc 0.571 → estimativa 0.80+</li>
+      <li>Cobertura geral: pequena queda esperada (-0.005), pois alguns matches "borderline" deixam de casar</li>
+      <li>Estrutura semantica MELHORA: menos blocos com tipo errado</li>
+    </ul>
+  </div>
+
+</body>
+</html>

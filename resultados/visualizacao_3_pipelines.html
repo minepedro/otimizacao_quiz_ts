@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>3 pipelines de extracao de PDF: Docling, MinerU, Nosso</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      background: linear-gradient(180deg, #f5f5f7 0%, #eef2f7 100%);
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #0a0a0a;
+      border-bottom: 4px solid #007acc;
+      padding-bottom: 12px;
+      margin-bottom: 8px;
+      font-size: 32px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+    h2 {
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px 8px 0 0;
+      margin: 32px 0 0 0;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    h2 .badge {
+      background: rgba(255,255,255,0.25);
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: normal;
+    }
+    .docling { background: linear-gradient(135deg, #1976d2, #0d47a1); }
+    .mineru { background: linear-gradient(135deg, #f57c00, #e65100); }
+    .nosso { background: linear-gradient(135deg, #388e3c, #1b5e20); }
+
+    .section {
+      background: white;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .section-content {
+      padding: 24px 28px;
+    }
+    .analogia {
+      background: linear-gradient(135deg, #fff8e1, #ffecb3);
+      border-left: 5px solid #f9a825;
+      padding: 16px 20px;
+      border-radius: 4px;
+      margin: 16px 0 24px 0;
+      font-size: 15px;
+    }
+    .analogia strong { color: #5d4037; }
+
+    .step {
+      background: #f8fafc;
+      border-left: 4px solid;
+      padding: 16px 20px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .step-doc { border-color: #1976d2; }
+    .step-min { border-color: #f57c00; }
+    .step-nos { border-color: #388e3c; }
+    .step-num {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      color: white;
+      text-align: center;
+      line-height: 28px;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+    .step-num-doc { background: #1976d2; }
+    .step-num-min { background: #f57c00; }
+    .step-num-nos { background: #388e3c; }
+    .step h4 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    pre, code {
+      font-family: "SF Mono", Consolas, "Courier New", monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 14px 18px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+    pre .comment { color: #94a3b8; }
+    pre .keyword { color: #c084fc; }
+    pre .string { color: #fbbf24; }
+    pre .num { color: #67e8f9; }
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #1e40af;
+      font-size: 12px;
+    }
+
+    .ascii {
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      padding: 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 12.5px;
+      line-height: 1.45;
+      white-space: pre;
+      overflow-x: auto;
+      color: #333;
+    }
+
+    .resumo {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      border-left: 5px solid #1976d2;
+      padding: 16px 20px;
+      border-radius: 4px;
+      margin: 16px 0;
+    }
+    .resumo-min { background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-color: #f57c00; }
+    .resumo-nos { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-color: #388e3c; }
+
+    table.compare {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin: 24px 0;
+    }
+    table.compare th, table.compare td {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 14px;
+    }
+    table.compare th {
+      background: #1a202c;
+      color: white;
+      font-weight: 600;
+    }
+    table.compare th.docling-th { background: #1976d2; }
+    table.compare th.mineru-th { background: #f57c00; }
+    table.compare th.nosso-th { background: #388e3c; }
+    table.compare tbody tr { border-bottom: 1px solid #e2e8f0; }
+    table.compare tbody tr:hover { background: #f8fafc; }
+    table.compare td:first-child { font-weight: 600; color: #475569; }
+
+    .ok { color: #059669; font-weight: 600; }
+    .warn { color: #d97706; font-weight: 600; }
+    .erro { color: #dc2626; font-weight: 600; }
+
+    .destaque {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px dashed #f59e0b;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 15px;
+    }
+    .destaque strong { color: #92400e; }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .case-card {
+      border: 2px solid;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .case-doc { border-color: #1976d2; background: #f0f7ff; }
+    .case-min { border-color: #f57c00; background: #fff8f0; }
+    .case-nos { border-color: #388e3c; background: #f0fff4; }
+    .case-card h5 {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .case-doc h5 { color: #1976d2; }
+    .case-min h5 { color: #f57c00; }
+    .case-nos h5 { color: #388e3c; }
+
+    .toc {
+      background: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+    }
+    .toc h3 { margin: 0 0 8px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    .toc ul { margin: 0; padding-left: 20px; }
+    .toc li { font-size: 14px; margin: 4px 0; }
+    .toc a { color: #007acc; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>3 pipelines de extracao de PDF</h1>
+  <p class="subtitle">
+    Como Docling, MinerU e o nosso pipeline cruzam texto vetorial (PyMuPDF/docling-parse)
+    com regioes detectadas por modelos de layout (RT-DETRv2 / DocLayout-YOLO).
+  </p>
+
+  <div class="toc">
+    <h3>Indice</h3>
+    <ul>
+      <li><a href="#docling">1. DOCLING - "concurso publico"</a></li>
+      <li><a href="#mineru">2. MINERU - "fila do banco"</a></li>
+      <li><a href="#nosso">3. NOSSO - "vestibular sem nota de corte"</a></li>
+      <li><a href="#caso-real">4. Caso real - como cada um trata um span de raspao</a></li>
+      <li><a href="#tabela">5. Tabela comparativa final</a></li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DOCLING -->
+  <!-- ============================================================ -->
+  <div id="docling"></div>
+  <h2 class="docling">DOCLING <span class="badge">RT-DETRv2 + best match + Union-Find</span></h2>
+  <div class="section">
+    <div class="section-content">
+
+      <div class="analogia">
+        <strong>Analogia:</strong> concurso publico. <code>clusters</code> sao vagas
+        (com tipo TITLE/TEXT/etc), <code>cells</code> sao candidatos (com texto).
+        Cada candidato calcula NOTA com TODAS as vagas, melhor nota leva.
+        <strong>Nota minima de corte: 20%.</strong>
+      </div>
+
+      <div class="step step-doc">
+        <h4><span class="step-num step-num-doc">1</span>RT-DETRv2 cria os clusters (vagas)</h4>
+        <pre>Cluster 1: tipo=<span class="string">TITLE</span>,    bbox=(50, 30, 500, 90)
+Cluster 2: tipo=<span class="string">LIST</span>,     bbox=(50, 100, 500, 350)
+Cluster 3: tipo=<span class="string">PICTURE</span>,  bbox=(550, 100, 900, 400)
+Cluster 4: tipo=<span class="string">TEXT</span>,     bbox=(50, 400, 900, 700)</pre>
+      </div>
+
+      <div class="step step-doc">
+        <h4><span class="step-num step-num-doc">2</span>docling-parse extrai os cells (candidatos)</h4>
+        <pre>Cell A: bbox=(60, 40, 480, 80),    text=<span class="string">"Aula 04 - Redes"</span>
+Cell B: bbox=(70, 110, 400, 140),  text=<span class="string">"- Hardware"</span>
+Cell C: bbox=(70, 150, 400, 180),  text=<span class="string">"- Software"</span>
+Cell D: bbox=(60, 410, 880, 690),  text=<span class="string">"Sistema de telecomunicacoes..."</span>
+Cell E: bbox=(560, 800, 700, 820), text=<span class="string">"Pg 1/12"</span>   <span class="comment"># rodape</span></pre>
+      </div>
+
+      <div class="step step-doc">
+        <h4><span class="step-num step-num-doc">3</span>Cada cell calcula IoS com TODOS os clusters</h4>
+        <pre>Cell A "Aula 04 - Redes":
+  vs Cluster 1 TITLE:    IoS = <span class="num">0.95</span>   <span class="comment"># muito dentro</span>
+  vs Cluster 2 LIST:     IoS = <span class="num">0.0</span>
+  vs Cluster 3 PICTURE:  IoS = <span class="num">0.0</span>
+  vs Cluster 4 TEXT:     IoS = <span class="num">0.0</span>
+
+  -&gt; MELHOR = TITLE (<span class="num">0.95</span>)
+  -&gt; <span class="num">0.95</span> &gt;= <span class="num">0.20</span> threshold = CASA
+  -&gt; Cell A vai pro Cluster 1 (TITLE)
+
+Cell E "Pg 1/12":
+  vs todos clusters: IoS = <span class="num">0.0</span>
+  -&gt; ORPHAN</pre>
+      </div>
+
+      <div class="step step-doc">
+        <h4><span class="step-num step-num-doc">4</span>Cluster pode ter MULTIPLOS cells</h4>
+        <div class="ascii">Cluster 2 LIST agora tem:
+  - Cell B "- Hardware"
+  - Cell C "- Software"
+
+texto final: "- Hardware\n- Software"</div>
+        <p style="margin-top: 8px; font-size: 14px; color: #555;">
+          Sem "consumo" — cells sao distribuidos pra clusters em paralelo, varios podem cair no mesmo.
+        </p>
+      </div>
+
+      <div class="step step-doc">
+        <h4><span class="step-num step-num-doc">5</span>Limpa clusters duplicados (Union-Find)</h4>
+        <pre>Cluster X: tipo=<span class="string">LIST_ITEM</span>, bbox=(50, 100, 500, 130)
+Cluster Y: tipo=<span class="string">TEXT</span>,      bbox=(48, 98, 502, 132)   <span class="comment"># quase igual</span>
+
+IoU(X, Y) = <span class="num">0.95</span>  -&gt; &gt; <span class="num">0.8</span> threshold
+-&gt; mesma coisa pelo modelo
+-&gt; mantém o mais ESPECIFICO (LIST_ITEM &gt; TEXT)
+-&gt; descarta Y</pre>
+      </div>
+
+      <div class="step step-doc">
+        <h4><span class="step-num step-num-doc">6</span>Trata orphans e clusters vazios</h4>
+        <pre><span class="keyword">if</span> create_orphan_clusters=<span class="num">True</span>:
+    cells orfaos viram cluster <span class="string">TEXT</span> novo  <span class="comment"># preserva</span>
+<span class="keyword">else</span>:
+    descarta
+
+<span class="keyword">if</span> keep_empty_clusters=<span class="num">False</span>:
+    clusters vazios sao removidos
+<span class="keyword">else</span> ou se for <span class="string">FORMULA</span>:
+    mantem</pre>
+      </div>
+
+      <div class="resumo">
+        <strong>Resumo Docling:</strong>
+        <ul style="margin: 8px 0 0 0;">
+          <li>Pra cada cell, calcula IoS com TODOS clusters [O(M x N)]</li>
+          <li>Cell vai pro cluster com maior IoS (se &gt;= 0.2)</li>
+          <li>Limpa clusters duplicados com Union-Find</li>
+          <li>Cells orphan viram cluster TEXT</li>
+          <li>Clusters vazios sao removidos (excetto FORMULA)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MINERU -->
+  <!-- ============================================================ -->
+  <div id="mineru"></div>
+  <h2 class="mineru">MINERU <span class="badge">DocLayout-YOLO + greedy first-claim</span></h2>
+  <div class="section">
+    <div class="section-content">
+
+      <div class="analogia">
+        <strong>Analogia:</strong> fila do banco. <code>blocos</code> sao caixas do banco
+        (com tipo), <code>spans</code> sao clientes na fila. Caixas atendem clientes UM POR
+        UM. Quando cliente eh atendido, sai da fila e nao pode ir pra outra caixa.
+        <strong>Threshold de atendimento: 50%.</strong>
+      </div>
+
+      <div class="step step-min">
+        <h4><span class="step-num step-num-min">1</span>DocLayout-YOLO cria os blocos (caixas)</h4>
+        <pre>Bloco 1: tipo=<span class="string">title</span>,  bbox=(50, 30, 500, 90)
+Bloco 2: tipo=<span class="string">text</span>,   bbox=(50, 100, 500, 350)
+Bloco 3: tipo=<span class="string">image</span>,  bbox=(550, 100, 900, 400)
+Bloco 4: tipo=<span class="string">text</span>,   bbox=(50, 400, 900, 700)</pre>
+      </div>
+
+      <div class="step step-min">
+        <h4><span class="step-num step-num-min">2</span>PyMuPDF extrai os spans (clientes)</h4>
+        <pre>Span 1: bbox=(60, 40, 480, 80),    text=<span class="string">"Aula 04 - Redes"</span>
+Span 2: bbox=(70, 110, 400, 140),  text=<span class="string">"Hardware"</span>
+Span 3: bbox=(70, 150, 400, 180),  text=<span class="string">"Software"</span>
+Span 4: bbox=(60, 410, 880, 690),  text=<span class="string">"Sistema..."</span>
+Span 5: bbox=(560, 800, 700, 820), text=<span class="string">"Pg 1/12"</span></pre>
+      </div>
+
+      <div class="step step-min">
+        <h4><span class="step-num step-num-min">3</span>Pool de spans disponiveis (estado inicial)</h4>
+        <pre>self.used_span_indices = <span class="keyword">set</span>()   <span class="comment"># vazio</span>
+spans_disponiveis = [Span 1, Span 2, Span 3, Span 4, Span 5]</pre>
+      </div>
+
+      <div class="step step-min">
+        <h4><span class="step-num step-num-min">4</span>Processa cada bloco EM ORDEM (consome spans)</h4>
+        <pre><span class="keyword">Processa BLOCO 1 (title):</span>
+  Span 1: IoS = <span class="num">0.95</span> &gt; <span class="num">0.5</span> -&gt; CASA
+    used_span_indices = {<span class="num">1</span>}
+  Span 2-5: IoS = <span class="num">0.0</span> -&gt; nao casa
+
+  <span class="comment"># Bloco 1 fica com: [Span 1]</span>
+
+<span class="keyword">Processa BLOCO 2 (text):</span>
+  Spans disponiveis: [<span class="num">2, 3, 4, 5</span>]   <span class="comment"># Span 1 ja foi usado</span>
+
+  Span 2: IoS = <span class="num">1.00</span> -&gt; CASA, used = {<span class="num">1, 2</span>}
+  Span 3: IoS = <span class="num">1.00</span> -&gt; CASA, used = {<span class="num">1, 2, 3</span>}
+  Span 4-5: nao casa
+
+  <span class="comment"># Bloco 2 fica com: [Span 2, Span 3]</span>
+
+<span class="keyword">Processa BLOCO 3 (image):</span>
+  -&gt; PULA matching de spans (regra especial pra image/table)
+  -&gt; Sintetiza bloco direto da bbox YOLO
+  <span class="comment"># Bloco 3 fica vazio (mas figura cropada)</span>
+
+<span class="keyword">Processa BLOCO 4 (text):</span>
+  Span 4: IoS = <span class="num">1.00</span> -&gt; CASA, used = {<span class="num">1, 2, 3, 4</span>}
+  Span 5: IoS = <span class="num">0.0</span> -&gt; nao casa</pre>
+      </div>
+
+      <div class="step step-min">
+        <h4><span class="step-num step-num-min">5</span>Spans restantes sao DROPADOS (limbo)</h4>
+        <pre>self.page_text_inline_formula_spans = remaining_spans()
+<span class="comment"># = [Span 5]   --&gt; orphan, NAO vai pro output principal</span></pre>
+        <p style="font-size: 14px; color: #555; margin-top: 8px;">
+          Spans nao consumidos ficam em "limbo" pra fixup de formula inline.
+          Na pratica sao perdidos do output principal.
+        </p>
+      </div>
+
+      <div class="step step-min">
+        <h4><span class="step-num step-num-min">6</span>Otimizacao: grid espacial 1D no eixo Y</h4>
+        <pre>Grid Y (faixas de 100px):
+  Y=0-100:    [Span 1]
+  Y=100-200:  [Span 2, Span 3]
+  Y=400-500:  [Span 4]
+  Y=800-900:  [Span 5]
+
+Bloco 2 (text) tem y=100-350:
+  So checa spans nas faixas Y=100-200, 200-300, 300-400
+  -&gt; ignora Span 1, 4, 5 (fora do range Y)</pre>
+      </div>
+
+      <div class="resumo resumo-min">
+        <strong>Resumo MinerU:</strong>
+        <ul style="margin: 8px 0 0 0;">
+          <li>Cria pool de spans disponiveis</li>
+          <li>Pra cada bloco EM ORDEM (sequencial):
+            <ul>
+              <li>Filtra candidatos pelo grid Y (otimizacao)</li>
+              <li>Pra cada candidato: se IoS &gt; 0.5, casa (e remove do pool)</li>
+            </ul>
+          </li>
+          <li>Tipos image/table/chart: pula matching, sintetiza direto</li>
+          <li>Spans nao consumidos: vao pra limbo (efetivamente perdidos)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- NOSSO -->
+  <!-- ============================================================ -->
+  <div id="nosso"></div>
+  <h2 class="nosso">NOSSO <span class="badge">DocLayout-YOLO + best match + threshold 0%</span></h2>
+  <div class="section">
+    <div class="section-content">
+
+      <div class="analogia">
+        <strong>Analogia:</strong> vestibular sem nota de corte. <code>regioes YOLO</code>
+        sao vagas (com tipo title/paragraph/etc), <code>blocos vetoriais</code> sao
+        candidatos (com texto). Cada candidato calcula nota com TODAS as vagas, melhor
+        nota leva. <strong>SEM nota de corte — qualquer um que tocou na vaga entra.</strong>
+      </div>
+
+      <div class="step step-nos">
+        <h4><span class="step-num step-num-nos">1</span>DocLayout-YOLO cria as regioes (vagas)</h4>
+        <pre>Regiao 1: tipo=<span class="string">title</span>,        bbox=(50, 30, 500, 90)
+Regiao 2: tipo=<span class="string">plain_text</span>,   bbox=(50, 100, 500, 350)
+Regiao 3: tipo=<span class="string">figure</span>,       bbox=(550, 100, 900, 400)
+Regiao 4: tipo=<span class="string">plain_text</span>,   bbox=(50, 400, 900, 700)</pre>
+      </div>
+
+      <div class="step step-nos">
+        <h4><span class="step-num step-num-nos">2</span>PyMuPDF extrai os blocos vetoriais (candidatos)</h4>
+        <pre>Bloco A: bbox=(60, 40, 480, 80),    text=<span class="string">"Aula 04 - Redes"</span>,    font=<span class="num">24pt</span>
+Bloco B: bbox=(70, 110, 400, 140),  text=<span class="string">"- Hardware"</span>,         font=<span class="num">14pt</span>
+Bloco C: bbox=(70, 150, 400, 180),  text=<span class="string">"- Software"</span>,         font=<span class="num">14pt</span>
+Bloco D: bbox=(60, 410, 880, 690),  text=<span class="string">"Sistema..."</span>,         font=<span class="num">12pt</span>
+Bloco E: bbox=(560, 800, 700, 820), text=<span class="string">"Pg 1/12"</span>,            font=<span class="num">8pt</span></pre>
+        <p style="font-size: 14px; color: #555; margin-top: 8px;">
+          <strong>Bonus que outros nao tem:</strong> font_size de cada bloco (do modo "dict" do PyMuPDF).
+        </p>
+      </div>
+
+      <div class="step step-nos">
+        <h4><span class="step-num step-num-nos">3</span>Cada bloco calcula IoS com TODAS as regioes</h4>
+        <pre><span class="comment"># codigo real em hibrido_layout_aware.py</span>
+<span class="keyword">for</span> b <span class="keyword">in</span> blocos_vetorial:
+    melhor_regiao = <span class="num">None</span>
+    melhor_overlap = <span class="num">0.0</span>
+    <span class="keyword">for</span> r <span class="keyword">in</span> regioes:
+        overlap = _intersecao_relativa(b.bbox, r.bbox)
+        <span class="keyword">if</span> overlap &gt; melhor_overlap:
+            melhor_overlap = overlap
+            melhor_regiao = r
+
+    <span class="keyword">if</span> melhor_regiao <span class="keyword">and</span> melhor_overlap &gt; <span class="num">0</span>:   <span class="comment"># THRESHOLD = 0%</span>
+        bloco.tipo = melhor_regiao.classe
+    <span class="keyword">else</span>:
+        bloco.tipo = <span class="string">"paragraph"</span></pre>
+      </div>
+
+      <div class="step step-nos">
+        <h4><span class="step-num step-num-nos">4</span>O caso de raspao (onde nosso difere de Docling)</h4>
+        <pre>Bloco F <span class="string">"- Diagrama de Venn"</span>:
+  vs Regiao 1 (title):       IoS = <span class="num">0.10</span>   <span class="comment"># de raspao (YOLO bbox grande)</span>
+  vs Regiao 2 (list):        IoS = <span class="num">0.0</span>
+  vs todas outras:           IoS = <span class="num">0.0</span>
+
+  -&gt; MELHOR = title (<span class="num">0.10</span>)
+  -&gt; <span class="num">0.10</span> &gt; <span class="num">0%</span> -&gt; CASA  <span class="comment"># NOSSO problema</span>
+  -&gt; Bloco F vira "title" ERRADO
+
+Docling: <span class="num">0.10</span> &lt; <span class="num">0.20</span> -&gt; nao casa, vira TEXT preservado
+MinerU:  <span class="num">0.10</span> &lt; <span class="num">0.50</span> -&gt; nao casa, dropado</pre>
+      </div>
+
+      <div class="step step-nos">
+        <h4><span class="step-num step-num-nos">5</span>Refinos extras do Sprint 6 (que outros nao tem)</h4>
+        <pre><span class="comment"># A2 - Levels de titulo via font_size</span>
+<span class="keyword">if</span> tipo == <span class="string">"title"</span>:
+    razao = font_size / mediano_da_pagina
+    <span class="keyword">if</span> razao &gt;= <span class="num">1.5</span>:  level = <span class="num">1</span>   <span class="comment"># #</span>
+    <span class="keyword">elif</span> razao &gt;= <span class="num">1.25</span>: level = <span class="num">2</span>   <span class="comment"># ##</span>
+    <span class="keyword">elif</span> razao &gt;= <span class="num">1.1</span>:  level = <span class="num">3</span>   <span class="comment"># ###</span>
+
+<span class="comment"># A3 - Header vs Footer pelo Y</span>
+<span class="keyword">if</span> classe == <span class="string">"abandon"</span>:
+    <span class="keyword">if</span> y_centro &lt; pagina_h * <span class="num">0.15</span>: tipo = <span class="string">"header"</span>
+    <span class="keyword">elif</span> y_centro &gt; pagina_h * <span class="num">0.85</span>: tipo = <span class="string">"footer"</span>
+    <span class="keyword">else</span>: tipo = <span class="string">"page_number"</span>
+
+<span class="comment"># A4 - list_item via regex (sobrescreve tipo)</span>
+<span class="keyword">if</span> RE_LIST_ITEM.match(text):
+    tipo = <span class="string">"list_item"</span>
+
+<span class="comment"># B - Hierarquia de listas via X do bbox</span>
+nivel = <span class="keyword">round</span>((bloco.x - x_min_pagina) / passo_indent)</pre>
+      </div>
+
+      <div class="step step-nos">
+        <h4><span class="step-num step-num-nos">6</span>OCR seletivo nas regioes "figure" sem texto vetorial</h4>
+        <pre><span class="keyword">for</span> regiao <span class="keyword">in</span> regioes:
+    <span class="keyword">if</span> regiao.classe <span class="keyword">in</span> (<span class="string">"figure"</span>, <span class="string">"table"</span>, <span class="string">"isolate_formula"</span>):
+        tem_vetorial = <span class="keyword">any</span>(
+            _intersecao_relativa(b.bbox, regiao.bbox) &gt; <span class="num">0.30</span>
+            <span class="keyword">for</span> b <span class="keyword">in</span> blocos_vetorial
+        )
+        <span class="keyword">if</span> <span class="keyword">not</span> tem_vetorial:
+            recorte = img_bgr[y1:y2, x1:x2]
+            hash_ = sha256(recorte)
+            <span class="keyword">if</span> hash_ <span class="keyword">in</span> cache_ocr:           <span class="comment"># D1: cache</span>
+                texto = cache_ocr[hash_]
+            <span class="keyword">else</span>:
+                texto = rapidocr(recorte)
+                cache_ocr[hash_] = texto
+            criar_bloco(tipo=<span class="string">"image"</span>, text=texto)</pre>
+      </div>
+
+      <div class="resumo resumo-nos">
+        <strong>Resumo Nosso:</strong>
+        <ul style="margin: 8px 0 0 0;">
+          <li>Pra cada bloco vetorial, calcula IoS com TODAS as regioes [O(M x N)]</li>
+          <li>Bloco vai pra regiao com maior IoS (qualquer overlap &gt; 0)</li>
+          <li>Refinos pos-classificacao: font_size pro level, regex pra list_item, Y pra header/footer</li>
+          <li>Hierarquia de listas via X do bbox</li>
+          <li>Blocos sem regiao: vira "paragraph" (preserva)</li>
+          <li>Regioes figure/table sem vetorial: OCR no recorte (com cache hash)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CASO REAL -->
+  <!-- ============================================================ -->
+  <div id="caso-real"></div>
+  <h2 style="background: linear-gradient(135deg, #6a1b9a, #4a148c);">
+    Caso real - como cada um trata um span de raspao
+  </h2>
+  <div class="section">
+    <div class="section-content">
+
+      <p style="font-size: 15px;">
+        Cenario: bloco vetorial <code>"- Diagrama de Venn"</code> tocou de raspao (IoS 10%)
+        a regiao "title" do YOLO porque a bbox da regiao foi desenhada um pouco grande.
+      </p>
+
+      <div class="case-grid">
+
+        <div class="case-card case-doc">
+          <h5>DOCLING</h5>
+          <p style="font-size: 14px; margin: 8px 0;"><strong>0.10 &lt; 0.20 threshold</strong></p>
+          <pre style="font-size: 11px;">-&gt; nao casa
+-&gt; cell vira ORPHAN
+-&gt; orphan vira cluster <span class="string">TEXT</span> novo
+-&gt; preserva o texto sem
+   classificacao errada</pre>
+          <p style="font-size: 13px; color: #15803d; margin-top: 8px;">
+            <strong>Resultado: TEXT (neutro, seguro)</strong>
+          </p>
+        </div>
+
+        <div class="case-card case-min">
+          <h5>MINERU</h5>
+          <p style="font-size: 14px; margin: 8px 0;"><strong>0.10 &lt; 0.50 threshold</strong></p>
+          <pre style="font-size: 11px;">-&gt; nao casa com title
+-&gt; bloco proximo (list)
+   esta no bbox certo,
+   mas o YOLO marcou title
+-&gt; span vai pra LIMBO
+-&gt; <span class="erro">DROPADO do output</span></pre>
+          <p style="font-size: 13px; color: #b91c1c; margin-top: 8px;">
+            <strong>Resultado: PERDIDO</strong>
+          </p>
+        </div>
+
+        <div class="case-card case-nos">
+          <h5>NOSSO</h5>
+          <p style="font-size: 14px; margin: 8px 0;"><strong>0.10 &gt; 0% threshold</strong></p>
+          <pre style="font-size: 11px;">-&gt; CASA com title
+-&gt; bloco vira <span class="string">"title"</span>
+-&gt; markdown sai como
+   <span class="string">"# - Diagrama de Venn"</span>
+-&gt; <span class="erro">CLASSIFICACAO ERRADA</span>
+   (deveria ser list_item)</pre>
+          <p style="font-size: 13px; color: #b91c1c; margin-top: 8px;">
+            <strong>Resultado: ERRADO</strong>
+          </p>
+        </div>
+
+      </div>
+
+      <div class="destaque">
+        <strong>Solucao proposta:</strong> adicionar threshold 0.2 no nosso pipeline
+        (igual Docling). Texto preservado como "paragraph", regex de bullet detecta
+        "list_item" automaticamente. Resolve o caso Aula 03 Probabilidade que regrediu
+        no Sprint 6.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TABELA COMPARATIVA -->
+  <!-- ============================================================ -->
+  <div id="tabela"></div>
+  <h2 style="background: linear-gradient(135deg, #455a64, #263238);">
+    Tabela comparativa final
+  </h2>
+
+  <table class="compare">
+    <thead>
+      <tr>
+        <th>Dimensao</th>
+        <th class="docling-th">Docling</th>
+        <th class="mineru-th">MinerU</th>
+        <th class="nosso-th">Nosso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Analogia</td>
+        <td>concurso publico</td>
+        <td>fila do banco</td>
+        <td>vestibular sem nota de corte</td>
+      </tr>
+      <tr>
+        <td>Algoritmo de match</td>
+        <td>best match</td>
+        <td>greedy first-claim</td>
+        <td>best match</td>
+      </tr>
+      <tr>
+        <td>Threshold IoS</td>
+        <td><span class="warn">20%</span></td>
+        <td><span class="erro">50%</span></td>
+        <td><span class="erro">0%</span> (problema)</td>
+      </tr>
+      <tr>
+        <td>Iteracao</td>
+        <td>por cell, testa todos clusters</td>
+        <td>por bloco, consome span</td>
+        <td>por bloco vetorial, testa todas regioes</td>
+      </tr>
+      <tr>
+        <td>Regioes duplicadas</td>
+        <td><span class="ok">Union-Find limpa</span></td>
+        <td>YOLO ja faz NMS</td>
+        <td>sem dedup adicional</td>
+      </tr>
+      <tr>
+        <td>Orphans</td>
+        <td><span class="ok">vira cluster TEXT</span></td>
+        <td><span class="erro">drop</span></td>
+        <td><span class="ok">vira paragraph</span></td>
+      </tr>
+      <tr>
+        <td>Figura/tabela</td>
+        <td><span class="ok">containment 80%</span></td>
+        <td><span class="ok">sintetiza direto</span></td>
+        <td><span class="warn">mesma regra dos outros</span></td>
+      </tr>
+      <tr>
+        <td>Reading order</td>
+        <td><span class="ok">stream nativo PDF (cell.index)</span></td>
+        <td><span class="ok">modelo ML treinado</span></td>
+        <td><span class="erro">geometrico (y/50, x)</span></td>
+      </tr>
+      <tr>
+        <td>Levels de titulo</td>
+        <td>so cluster TITLE generico</td>
+        <td>level= 1-6 hard via classificador</td>
+        <td><span class="ok">via font_size do PyMuPDF</span></td>
+      </tr>
+      <tr>
+        <td>Hierarquia de listas</td>
+        <td>preserva via list_group</td>
+        <td>nao detecta nesting</td>
+        <td><span class="ok">via X do bbox (Sprint 6)</span></td>
+      </tr>
+      <tr>
+        <td>Cache OCR por hash</td>
+        <td>nao</td>
+        <td>nao explicito</td>
+        <td><span class="ok">SHA-256 (Sprint 6)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin: 32px 0; padding: 20px 24px; background: #1a202c; color: white; border-radius: 8px;">
+    <h3 style="margin-top: 0; color: white;">Conclusao</h3>
+    <p style="font-size: 15px; line-height: 1.7;">
+      Nosso pipeline tem a mesma <strong>filosofia do Docling</strong>: best match preservando orphans.
+      A diferenca principal eh que <strong>nao temos threshold</strong>, o que causa
+      classificacoes erradas em casos de raspao (Aula 03 Probabilidade no Sprint 6).
+    </p>
+    <p style="font-size: 15px; line-height: 1.7;">
+      <strong>Proximos passos sugeridos:</strong>
+    </p>
+    <ol style="font-size: 15px; line-height: 1.7;">
+      <li>Adicionar <strong>threshold IoS 0.2</strong> (igual Docling) — resolve Aula 03</li>
+      <li>Trocar reading order pra usar <code>block_no</code> do PyMuPDF (igual Docling) — resolve Realismo multi-coluna</li>
+      <li>Adicionar regra <strong>containment 80%</strong> pra <code>figure</code>/<code>table</code> — reduz falsos positivos</li>
+    </ol>
+  </div>
+
+</body>
+</html>
