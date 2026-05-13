@@ -31,12 +31,12 @@ from statistics import median
 from typing import TYPE_CHECKING
 
 import cv2
-import fitz
 import numpy as np
 
 from ..schemas import BlocoExtraido, ResultadoExtracao
 from . import layout_detector
 from .layout_detector import RegiaoLayout, classe_para_tipo_bloco
+from .pdf_backend import PdfBackend, PageInfo  # Sprint 11: substitui PyMuPDF (AGPL)
 
 if TYPE_CHECKING:
     from rapidocr_onnxruntime import RapidOCR
@@ -190,16 +190,9 @@ def _refinar_tipo_abandon(
     return "page_number"
 
 
-def _renderizar_pagina_bgr(page: fitz.Page, dpi: int = DPI_RENDER) -> np.ndarray:
-    pix = page.get_pixmap(dpi=dpi)
-    img = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)
-    if pix.n == 4:
-        return cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
-    if pix.n == 3:
-        return cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    if pix.n == 1:
-        return cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-    raise ValueError(f"PixMap n={pix.n}")
+def _renderizar_pagina_bgr(page: PageInfo, dpi: int = DPI_RENDER) -> np.ndarray:
+    """Sprint 11: usa pdf_backend (pypdfium2) em vez de PyMuPDF."""
+    return page.render_bgr(dpi=dpi)
 
 
 def _intersecao_relativa(
@@ -236,73 +229,16 @@ def _converter_bbox_pdf_para_img(
 # ============================================================
 
 
-def _extrair_blocos_vetorial(page: fitz.Page) -> list[dict]:
-    """Devolve blocos vetoriais com bbox, texto, block_no E font_size mediano.
+def _extrair_blocos_vetorial(page: PageInfo) -> list[dict]:
+    """Sprint 11: delega pra PageInfo.extract_blocks() do pdf_backend.
 
-    Usa modo 'blocks' (com agrupamento heuristico de paragrafos) como
-    estrutura primaria, e cruza com 'dict' (spans) apenas pra inferir
-    font_size + font_flags (bold/italic) de cada bloco.
+    Devolve blocos vetoriais com bbox, texto, block_no, font_size,
+    is_bold, is_italic — mesma estrutura que a versao PyMuPDF anterior.
     """
-    # 1. Spans com font_size E font_flags (do modo "dict")
-    # font_flags bits: 1=italic, 4=bold (PyMuPDF docs)
-    d = page.get_text("dict")
-    spans_info: list[dict] = []
-    for bx in d.get("blocks", []):
-        if bx.get("type") != 0:
-            continue
-        for line in bx.get("lines", []):
-            for span in line.get("spans", []):
-                sz = span.get("size")
-                bbox_span = span.get("bbox")
-                if sz is None or not bbox_span or len(bbox_span) < 4:
-                    continue
-                spans_info.append({
-                    "bbox": tuple(bbox_span[:4]),
-                    "size": float(sz),
-                    "flags": int(span.get("flags", 0)),
-                })
-
-    # 2. Blocos agrupados (modo "blocks") — estrutura principal
-    blocos = []
-    for bx in page.get_text("blocks", sort=True):
-        if len(bx) < 7:
-            continue
-        x0, y0, x1, y1, texto, block_no, block_type = bx[:7]
-        if block_type != 0:
-            continue
-        texto = _limpar_texto((texto or "").strip())
-        if not texto:
-            continue
-
-        # Acha font_size + flags dos spans cujo bbox cai dentro deste bloco
-        spans_no_bloco = [
-            s
-            for s in spans_info
-            if x0 - 1 <= s["bbox"][0] and s["bbox"][2] <= x1 + 1
-            and y0 - 1 <= s["bbox"][1] and s["bbox"][3] <= y1 + 1
-        ]
-        sizes = [s["size"] for s in spans_no_bloco]
-        font_size = median(sizes) if sizes else 12.0
-
-        # Sprint 9 item 4: detecta bold/italic pelo flags da MAIORIA dos spans
-        # Threshold conservador (80%) pra evitar marcar paragrafos inteiros
-        # como bold quando so algumas palavras sao destacadas
-        n_spans = max(1, len(spans_no_bloco))
-        n_bold = sum(1 for s in spans_no_bloco if s["flags"] & 4)
-        n_italic = sum(1 for s in spans_no_bloco if s["flags"] & 1)
-        is_bold = n_bold >= n_spans * 0.80
-        is_italic = n_italic >= n_spans * 0.80
-
-        blocos.append(
-            {
-                "bbox_pdf": (float(x0), float(y0), float(x1), float(y1)),
-                "text": texto,
-                "block_no": int(block_no),
-                "font_size": float(font_size),
-                "is_bold": is_bold,
-                "is_italic": is_italic,
-            }
-        )
+    blocos = page.extract_blocks()
+    # Aplica _limpar_texto (hard spaces → espaco normal) em cada bloco
+    for b in blocos:
+        b["text"] = _limpar_texto(b["text"])
     return blocos
 
 
@@ -467,7 +403,7 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
     dir_imagens_pdf = DIR_BASE_IMAGES / f"{caminho.stem}_images"
 
     try:
-        doc = fitz.open(caminho)
+        doc = PdfBackend(caminho)   # Sprint 11: pypdfium2 + pdfplumber em vez de fitz
     except Exception as e:
         return ResultadoExtracao(
             extrator=NOME_EXTRATOR,
@@ -492,15 +428,17 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
         # em "title" mesmo quando YOLO nao detectou.
         # Resolve casos como Realismo onde YOLO falha em detectar titulos sutis.
         todos_fonts: list[float] = []
-        for p in doc:
+        for i in range(doc.page_count):
+            p = doc.get_page(i)
             blocos_p = _extrair_blocos_vetorial(p)
             todos_fonts.extend(b["font_size"] for b in blocos_p if b.get("font_size"))
         font_mediano_doc = median(todos_fonts) if todos_fonts else 12.0
         FONT_MULT_TITLE = 1.4   # threshold pra promover pra title
 
-        for page_idx, page in enumerate(doc):
-            page_width_pt = page.rect.width
-            page_height_pt = page.rect.height
+        for page_idx in range(doc.page_count):
+            page = doc.get_page(page_idx)
+            page_width_pt = page.width
+            page_height_pt = page.height
 
             # 1. Render + 2. Layout (YOLO)
             try:

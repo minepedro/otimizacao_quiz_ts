@@ -14,7 +14,10 @@
 #     torch torchvision --index-url https://download.pytorch.org/whl/cu128
 # ============================================================
 
-# Extracao base
+# Extracao base — pdf_backend usa pypdfium2 (Apache 2.0) + pdfplumber (MIT)
+# em vez de pymupdf (AGPL) pra permitir embarcar no tutor-ai sem
+# contaminar o produto com licenca AGPL.
+# pymupdf mantido como dep opcional pra benchmark/comparacao.
 pymupdf>=1.24
 pdfplumber>=0.11
 pypdfium2>=4.30
