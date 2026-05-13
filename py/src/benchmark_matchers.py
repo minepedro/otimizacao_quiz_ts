@@ -85,6 +85,7 @@ def main() -> int:
         "best_02": hibrido_v2.extrair_best_02,
         "greedy_05": hibrido_v2.extrair_greedy_05,
         "confidence": hibrido_v2.extrair_confidence,
+        "score_composto": hibrido_v2.extrair_score_composto,
     }
 
     for matcher_name in matcher_names:

@@ -1,7 +1,7 @@
 {
   "best_0": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 12.3111,
+    "tempo_seg_medio": 12.0983,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.2,
     "sim_levenshtein": 0.6858,
@@ -12,7 +12,7 @@
   },
   "best_02": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.5471,
+    "tempo_seg_medio": 5.5337,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.0,
     "sim_levenshtein": 0.6856,
@@ -23,7 +23,7 @@
   },
   "greedy_05": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.5622,
+    "tempo_seg_medio": 5.85,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 4.9,
     "sim_levenshtein": 0.6858,
@@ -34,13 +34,24 @@
   },
   "confidence": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.5713,
+    "tempo_seg_medio": 5.93,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.0,
     "sim_levenshtein": 0.6855,
     "cobertura_palavras": 0.7848,
     "sim_bigramas": 0.7044,
     "tamanho_relativo": 0.8184,
+    "qualidade_excesso": 0.8055
+  },
+  "score_composto": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 6.1378,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.1,
+    "sim_levenshtein": 0.6864,
+    "cobertura_palavras": 0.7854,
+    "sim_bigramas": 0.7044,
+    "tamanho_relativo": 0.8176,
     "qualidade_excesso": 0.8055
   }
 }

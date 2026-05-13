@@ -383,12 +383,122 @@ def matcher_confidence_aware(bloco: dict, regioes: list[RegiaoLayout], img_h: in
     return None
 
 
+# ============================================================
+# Score composto (#2) — combina IoS com sinais de dominio
+# ============================================================
+
+# Pesos pra cada sinal (calibraveis depois via grid search)
+PESO_IOS = 1.0           # geometria pura (base)
+PESO_FONT_TITLE = 0.30   # bonus pra title se font grande
+PESO_REGEX_LIST = 0.40   # bonus pra list_item se tem bullet
+PESO_POSITION = 0.20     # bonus pra header/footer pelo Y
+PENALIDADE_TITLE_SEM_FONT = 0.30  # penalidade se title MAS font normal
+PENALIDADE_NUMERICO_NAO_PG = 0.20  # penalidade se text e numero E tipo nao e page_number
+
+# Threshold minimo do score combinado pra aceitar match
+SCORE_MIN_THRESHOLD = 0.30
+
+
+def _bonus_font(bloco: dict, classe: str, font_mediano: float) -> float:
+    """Bonus pra title se font_size grande, penalidade se title com font normal."""
+    if classe != "title":
+        return 0.0
+    if font_mediano <= 0:
+        return 0.0
+    razao = bloco.get("font_size", 12.0) / font_mediano
+    if razao >= 1.25:
+        return PESO_FONT_TITLE        # title justificado
+    if razao >= 1.10:
+        return PESO_FONT_TITLE * 0.5  # title borderline
+    return -PENALIDADE_TITLE_SEM_FONT # title com font normal — suspeito
+
+
+def _bonus_regex(bloco: dict, classe: str) -> float:
+    """Bonus pra list_item/list se text comeca com bullet/numero."""
+    if classe not in ("list_item", "list", "plain_text"):
+        return 0.0
+    if _eh_list_item(bloco["text"]):
+        if classe in ("list_item", "list"):
+            return PESO_REGEX_LIST           # list_item com bullet — alinhado
+        else:
+            return PESO_REGEX_LIST * 0.3     # bullet em plain_text — fraco bonus
+    return 0.0
+
+
+def _bonus_position(bloco: dict, classe: str, img_h: int) -> float:
+    """Bonus pra header/footer/page_number baseado em Y do bloco."""
+    if classe != "abandon":
+        return 0.0
+    if img_h <= 0:
+        return 0.0
+    bbox_img = bloco.get("bbox_img")
+    if not bbox_img:
+        return 0.0
+    y_centro = (bbox_img[1] + bbox_img[3]) / 2
+    razao_y = y_centro / img_h
+    # abandon eh header/footer — confirma se esta nas extremidades
+    if razao_y < HEADER_Y_MAX or razao_y > FOOTER_Y_MIN:
+        return PESO_POSITION
+    return 0.0
+
+
+def _penalidade_numerico_isolado(bloco: dict, classe: str) -> float:
+    """Texto numerico isolado (ex: '5', '12') tem penalidade pra tipos
+    nao-page_number. Provavel paginacao."""
+    text = bloco["text"].strip()
+    if len(text) > 5:
+        return 0.0
+    # so digitos + espacos + barras (ex: "5", "12/24", "Pg 3")
+    eh_numerico = all(c in "0123456789 /" for c in text)
+    if not eh_numerico:
+        return 0.0
+    if classe in ("page_number", "abandon", "footer"):
+        return 0.0  # ok, eh natural pra esses tipos
+    return -PENALIDADE_NUMERICO_NAO_PG
+
+
+def _score_composto(
+    bloco: dict, regiao: RegiaoLayout, font_mediano: float, img_h: int
+) -> float:
+    """Score combinado: geometria + dominio."""
+    ios = _intersecao_relativa(bloco["bbox_img"], regiao.bbox)
+    score = PESO_IOS * ios
+
+    # Sinais de dominio só importam se ja houve algum overlap geometrico
+    if ios > 0:
+        score += _bonus_font(bloco, regiao.classe, font_mediano)
+        score += _bonus_regex(bloco, regiao.classe)
+        score += _bonus_position(bloco, regiao.classe, img_h)
+        score += _penalidade_numerico_isolado(bloco, regiao.classe)
+
+    return score
+
+
+def matcher_score_composto(bloco: dict, regioes: list[RegiaoLayout], img_h: int) -> "RegiaoLayout | None":
+    """Best match usando SCORE COMPOSTO (IoS + font + regex + position)."""
+    # font_mediano vem do contexto — aproximacao: usar 12.0 padrao se nao
+    # tiver. (Em producao seria injetado do pipeline; aqui simplifico.)
+    font_mediano = bloco.get("_font_mediano_pagina", 12.0)
+
+    melhor = None
+    melhor_score = 0.0
+    for r in regioes:
+        s = _score_composto(bloco, r, font_mediano, img_h)
+        if s > melhor_score:
+            melhor_score = s
+            melhor = r
+    if melhor and melhor_score >= SCORE_MIN_THRESHOLD:
+        return melhor
+    return None
+
+
 # Registry: nome -> (matcher_fn, descricao)
 MATCHERS: dict[str, tuple[MatcherFn, str]] = {
     "best_0": (matcher_best_0, "Best match SEM threshold (atual hibrido_layout_aware)"),
     "best_02": (matcher_best_02, "Best match com threshold IoS 0.2 (Docling-style)"),
     "greedy_05": (matcher_greedy_05, "Best match com threshold IoS 0.5 (MinerU-style)"),
     "confidence": (matcher_confidence_aware, "Threshold dinamico por YOLO confidence (0.10 / 0.30 / 0.50)"),
+    "score_composto": (matcher_score_composto, "Score IoS + font_size + regex bullet + posicao Y (+penalidades)"),
 }
 
 
@@ -454,6 +564,10 @@ def _extrair_com_matcher(
 
             font_sizes = [b["font_size"] for b in blocos_vetorial if b["font_size"]]
             font_size_mediano = median(font_sizes) if font_sizes else 12.0
+
+            # Anota mediano em cada bloco pra matchers que precisam (score_composto)
+            for b in blocos_vetorial:
+                b["_font_mediano_pagina"] = font_size_mediano
 
             blocos_pagina: list[BlocoExtraido] = []
             blocos_list_item_da_pagina: list[BlocoExtraido] = []
@@ -603,3 +717,7 @@ def extrair_greedy_05(caminho_pdf: str | Path) -> ResultadoExtracao:
 
 def extrair_confidence(caminho_pdf: str | Path) -> ResultadoExtracao:
     return _extrair_com_matcher(caminho_pdf, "confidence")
+
+
+def extrair_score_composto(caminho_pdf: str | Path) -> ResultadoExtracao:
+    return _extrair_com_matcher(caminho_pdf, "score_composto")
