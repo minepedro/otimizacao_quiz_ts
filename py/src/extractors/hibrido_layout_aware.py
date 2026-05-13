@@ -446,9 +446,13 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
 
             blocos_pagina: list[BlocoExtraido] = []
             blocos_list_item_da_pagina: list[BlocoExtraido] = []
+            # Sprint 8 item 2: dict paralelo com ordem natural do PDF (block_no)
+            # pra reading order multi-coluna funcionar corretamente
+            pdf_order_map: dict[str, int] = {}
 
             for vi, b in enumerate(blocos_vetorial):
-                # Acha regiao YOLO mais sobreposta (qualquer % > 0)
+                # Sprint 8 item 1: best_02 (threshold IoS >= 0.20, estilo Docling)
+                # Acha regiao YOLO mais sobreposta com IoS >= 0.20
                 melhor_regiao: RegiaoLayout | None = None
                 melhor_overlap = 0.0
                 for r in regioes:
@@ -457,8 +461,8 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
                         melhor_overlap = overlap
                         melhor_regiao = r
 
-                # Atribui tipo
-                if melhor_regiao and melhor_overlap > 0:
+                # Atribui tipo (threshold 0.20 — best_02 / Docling-style)
+                if melhor_regiao and melhor_overlap >= 0.20:
                     if melhor_regiao.classe == "abandon":
                         tipo = _refinar_tipo_abandon(melhor_regiao.bbox, img_h)  # A3
                     else:
@@ -470,20 +474,27 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
                 if _eh_list_item(b["text"]):
                     tipo = "list_item"
 
+                # Sprint 8 item 3: tipo "image" com texto longo (> 100 chars)
+                # eh provavel paragraph sobreposto a regiao figure — reclassifica
+                if tipo == "image" and len(b["text"]) > 100:
+                    tipo = "paragraph"
+
                 # A2: nivel pra title via font_size
                 level: int | None = None
                 if tipo == "title":
                     level = _calcular_nivel_titulo(b["font_size"], font_size_mediano)
 
+                block_id = f"p{page_idx}-vec{vi}"
                 bloco = BlocoExtraido(
                     type=tipo,
                     text=b["text"],
                     page_idx=page_idx,
                     bbox=b["bbox_pdf"],
-                    block_id=f"p{page_idx}-vec{vi}",
+                    block_id=block_id,
                     level=level,
                 )
                 blocos_pagina.append(bloco)
+                pdf_order_map[block_id] = b["block_no"]   # Sprint 8 item 2
                 if tipo == "list_item":
                     blocos_list_item_da_pagina.append(bloco)
 
@@ -539,9 +550,10 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
                     # OCR + dedup de linhas duplicadas (efeito sombra)
                     texto_ocr = _deduplica_linhas_consecutivas(_ocr_recorte_cached(recorte, h))
 
-                    # Salva imagem (D2) pra figuras de tamanho normal
+                    # Sprint 8 item 4: SEMPRE salva crop pra image/formula/table
+                    # (paridade RAG com MinerU — usuario pode linkar de volta a figura)
                     image_path: str | None = None
-                    if tipo_regiao in ("image", "formula"):
+                    if tipo_regiao in ("image", "formula", "table"):
                         try:
                             image_path = _salvar_imagem_recorte(recorte, h, dir_imagens_pdf)
                         except Exception:
@@ -553,25 +565,34 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
                     ):
                         continue
 
+                    block_id_ocr = f"p{page_idx}-ocr{ri}"
                     blocos_pagina.append(
                         BlocoExtraido(
                             type=tipo_regiao,
                             text=texto_ocr,
                             page_idx=page_idx,
                             bbox=regiao.bbox,
-                            block_id=f"p{page_idx}-ocr{ri}",
-                            image_path=image_path if tipo_regiao == "image" else None,
+                            block_id=block_id_ocr,
+                            # Sprint 8 item 4: image_path em todos os tipos visuais
+                            image_path=image_path if tipo_regiao in ("image", "formula", "table") else None,
                         )
                     )
+                    # Sprint 8 item 2: blocos OCR vao pro final da pagina,
+                    # ordenados por Y do bbox (offset alto pra aparecer depois
+                    # de qualquer block_no vetorial)
+                    pdf_order_map[block_id_ocr] = 10000 + int(regiao.bbox[1])
 
             # B: hierarquia de listas (calcula nivel via x do bbox)
             niveis_lista = _calcular_niveis_listas(blocos_list_item_da_pagina)
 
-            # Reading order: ordena blocos por (y, x)
+            # Sprint 8 item 2: Reading order via block_no do PyMuPDF
+            # Resolve multi-coluna automaticamente em PDFs com stream limpo
+            # (mesma estrategia do Docling com cell.index)
             blocos_pagina.sort(
                 key=lambda b: (
-                    round((b.bbox[1] if b.bbox else 0) / 50) * 50,
-                    b.bbox[0] if b.bbox else 0,
+                    pdf_order_map.get(b.block_id or "", 99999),
+                    b.bbox[1] if b.bbox else 0,  # tiebreak Y
+                    b.bbox[0] if b.bbox else 0,  # tiebreak X
                 )
             )
 
