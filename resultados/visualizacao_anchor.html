@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Algoritmo Anchor + Propagacao - como funciona</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      background: linear-gradient(180deg, #f5f5f7 0%, #eef2f7 100%);
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #0a0a0a;
+      border-bottom: 4px solid #16a34a;
+      padding-bottom: 12px;
+      margin-bottom: 8px;
+      font-size: 32px;
+    }
+    .subtitle { color: #666; font-size: 16px; margin-bottom: 32px; }
+    h2 {
+      color: white;
+      padding: 14px 22px;
+      border-radius: 8px 8px 0 0;
+      margin: 32px 0 0 0;
+      font-size: 22px;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+    }
+    h3 { color: #15803d; margin-top: 24px; font-size: 18px; }
+    .section {
+      background: white;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .section-content { padding: 24px 28px; }
+    .analogia {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-left: 5px solid #f59e0b;
+      padding: 16px 20px;
+      border-radius: 4px;
+      margin: 16px 0 24px 0;
+      font-size: 15px;
+    }
+    .step {
+      background: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      padding: 16px 20px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .step-num {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      color: white;
+      text-align: center;
+      line-height: 28px;
+      font-weight: 700;
+      margin-right: 8px;
+      background: #16a34a;
+    }
+    .step h4 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      color: #14532d;
+    }
+    pre, code {
+      font-family: "SF Mono", Consolas, "Courier New", monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 12px 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #15803d;
+      font-size: 12px;
+    }
+
+    svg { background: #fafafa; border: 1px solid #ddd; display: block; margin: 12px auto; }
+    .yolo-box-title { fill: rgba(220, 38, 38, 0.10); stroke: #dc2626; stroke-width: 2; stroke-dasharray: 6 3; }
+    .yolo-box-list { fill: rgba(168, 85, 247, 0.10); stroke: #a855f7; stroke-width: 2; stroke-dasharray: 6 3; }
+    .yolo-box-paragraph { fill: rgba(59, 130, 246, 0.10); stroke: #3b82f6; stroke-width: 2; stroke-dasharray: 6 3; }
+    .yolo-box-figure { fill: rgba(34, 197, 94, 0.10); stroke: #22c55e; stroke-width: 2; stroke-dasharray: 6 3; }
+
+    .bloco { fill: white; stroke: #475569; stroke-width: 1.5; }
+    .bloco-livre { fill: #f8fafc; stroke: #94a3b8; stroke-dasharray: 3 2; }
+    .bloco-anchor { fill: #fef3c7; stroke: #f59e0b; stroke-width: 3; }
+    .bloco-vizinho { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; }
+    .bloco-titulo { fill: rgba(220, 38, 38, 0.20); stroke: #dc2626; stroke-width: 2; }
+    .bloco-list { fill: rgba(168, 85, 247, 0.20); stroke: #a855f7; stroke-width: 2; }
+    .bloco-paragraph { fill: rgba(59, 130, 246, 0.20); stroke: #3b82f6; stroke-width: 2; }
+
+    .label { font-family: -apple-system, sans-serif; font-size: 11px; font-weight: 600; }
+    .label-title { fill: #dc2626; }
+    .label-list { fill: #a855f7; }
+    .label-paragraph { fill: #3b82f6; }
+
+    .ancla-mark {
+      fill: #f59e0b;
+      stroke: white;
+      stroke-width: 1;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .ios-num {
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .ios-alta { fill: #15803d; }
+    .ios-media { fill: #ca8a04; }
+    .ios-baixa { fill: #dc2626; }
+
+    .legend {
+      background: white;
+      padding: 16px 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin: 16px 0;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-box { width: 24px; height: 24px; border-radius: 3px; }
+
+    .resultado-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .card {
+      border: 2px solid;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .card-best { border-color: #ef4444; background: #fef2f2; }
+    .card-anchor { border-color: #16a34a; background: #f0fdf4; }
+    .card h5 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-best h5 { color: #b91c1c; }
+    .card-anchor h5 { color: #15803d; }
+
+    .ok { color: #15803d; font-weight: 700; }
+    .erro { color: #b91c1c; font-weight: 700; }
+    .destaque {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px dashed #f59e0b;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .toc {
+      background: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+    }
+    .toc h3 { margin: 0 0 8px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    .toc ul { margin: 0; padding-left: 20px; }
+    .toc li { font-size: 14px; margin: 4px 0; }
+    .toc a { color: #15803d; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>Algoritmo Anchor + Propagacao</h1>
+  <p class="subtitle">
+    Como o nosso melhor matcher (vencedor do Sprint 7b) funciona passo a passo —
+    visualizado com bbox e exemplos reais.
+  </p>
+
+  <div class="toc">
+    <h3>Indice</h3>
+    <ul>
+      <li><a href="#analogia">1. Analogia: a festa dos VIPs</a></li>
+      <li><a href="#algoritmo">2. Algoritmo passo a passo</a></li>
+      <li><a href="#exemplo">3. Exemplo concreto visualizado (3 regioes + 5 blocos)</a></li>
+      <li><a href="#vsbest">4. Anchor vs Best Match — caso onde anchor SALVA</a></li>
+      <li><a href="#tradeoff">5. Trade-off — quando anchor pode propagar errado</a></li>
+      <li><a href="#porque">6. Por que ordenar por YOLO confidence</a></li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ANALOGIA -->
+  <!-- ============================================================ -->
+  <div id="analogia"></div>
+  <h2>1. Analogia: a festa dos VIPs</h2>
+  <div class="section">
+    <div class="section-content">
+
+      <div class="analogia">
+        Imagina uma <strong>festa em varios ambientes</strong> (sala, cozinha,
+        varanda). Cada ambiente tem um <strong>tema</strong> (formal, churrasco,
+        dance). Os convidados precisam ir pra algum ambiente.
+      </div>
+
+      <p>Em vez de cada convidado decidir sozinho:</p>
+
+      <ol style="font-size: 15px; line-height: 1.8;">
+        <li><strong>Organizador escolhe o VIP de cada ambiente</strong> = a pessoa mais
+          "tipica" do tema (quem mais bate com o ambiente)</li>
+        <li><strong>VIP "marca" o ambiente como ocupado por ele</strong></li>
+        <li><strong>Amigos proximos do VIP (mesmo grupinho social) automaticamente</strong>
+          vao pro mesmo ambiente, sem precisar perguntar a eles</li>
+        <li>Convidados nao-amigos: vao pro proximo ambiente disputado</li>
+      </ol>
+
+      <h3>Mapeando pra nosso pipeline:</h3>
+      <ul>
+        <li><strong>Ambientes</strong> = regioes detectadas pelo YOLO (com tipo: title, list, paragraph...)</li>
+        <li><strong>Convidados</strong> = blocos vetoriais do PyMuPDF</li>
+        <li><strong>VIP</strong> = anchor (bloco com maior IoS na regiao)</li>
+        <li><strong>Amigos do VIP</strong> = vizinhos do anchor (mesma faixa Y vertical)</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ALGORITMO -->
+  <!-- ============================================================ -->
+  <div id="algoritmo"></div>
+  <h2>2. Algoritmo passo a passo</h2>
+  <div class="section">
+    <div class="section-content">
+
+      <div class="step">
+        <h4><span class="step-num">0</span>Preparacao</h4>
+        <pre><span style="color:#94a3b8"># Inicializa todos os blocos como NAO-ATRIBUIDOS</span>
+<span style="color:#c084fc">for</span> bloco <span style="color:#c084fc">in</span> blocos:
+    bloco._anchor_regiao = <span style="color:#67e8f9">None</span></pre>
+      </div>
+
+      <div class="step">
+        <h4><span class="step-num">1</span>Ordena regioes YOLO por confidence DECRESCENTE</h4>
+        <pre>regioes_sorted = <span style="color:#fbbf24">sorted</span>(regioes, key=<span style="color:#c084fc">lambda</span> r: -r.confidence)
+<span style="color:#94a3b8"># mais confiantes primeiro</span></pre>
+        <p style="font-size: 13px; color: #555; margin-top: 8px;">
+          <strong>Por que:</strong> regioes em que YOLO esta mais seguro processadas
+          primeiro. Anchors "consolidados" sao escolhidos primeiro, vizinhos herdam
+          tipo de fontes confiaveis.
+        </p>
+      </div>
+
+      <div class="step">
+        <h4><span class="step-num">2</span>Pra cada regiao em ordem, encontra o ANCHOR</h4>
+        <pre><span style="color:#c084fc">for</span> regiao <span style="color:#c084fc">in</span> regioes_sorted:
+
+    <span style="color:#94a3b8"># Lista candidatos disponiveis</span>
+    candidatos = [b <span style="color:#c084fc">for</span> b <span style="color:#c084fc">in</span> blocos <span style="color:#c084fc">if</span> b._anchor_regiao <span style="color:#c084fc">is</span> <span style="color:#67e8f9">None</span>]
+    <span style="color:#c084fc">if</span> <span style="color:#c084fc">not</span> candidatos:
+        <span style="color:#c084fc">continue</span>
+
+    <span style="color:#94a3b8"># Encontra o anchor (maior IoS com a regiao)</span>
+    anchor, ios_anchor = <span style="color:#fbbf24">max</span>(
+        ((b, ios(b.bbox, regiao.bbox)) <span style="color:#c084fc">for</span> b <span style="color:#c084fc">in</span> candidatos),
+        key=<span style="color:#c084fc">lambda</span> x: x[<span style="color:#67e8f9">1</span>]
+    )
+
+    <span style="color:#94a3b8"># Anchor precisa casar FORTE (IoS &gt;= 50%)</span>
+    <span style="color:#c084fc">if</span> ios_anchor &lt; <span style="color:#67e8f9">0.50</span>:
+        <span style="color:#c084fc">continue</span>   <span style="color:#94a3b8"># nenhum bloco bate forte com essa regiao</span>
+
+    <span style="color:#94a3b8"># Anchor casa</span>
+    anchor._anchor_regiao = regiao</pre>
+      </div>
+
+      <div class="step">
+        <h4><span class="step-num">3</span>Propaga pra vizinhos do anchor</h4>
+        <pre>    anchor_y_centro = (anchor.y1 + anchor.y2) / <span style="color:#67e8f9">2</span>
+    anchor_altura = anchor.y2 - anchor.y1
+
+    <span style="color:#c084fc">for</span> vizinho <span style="color:#c084fc">in</span> blocos:
+        <span style="color:#c084fc">if</span> vizinho._anchor_regiao <span style="color:#c084fc">is</span> <span style="color:#c084fc">not</span> <span style="color:#67e8f9">None</span>:
+            <span style="color:#c084fc">continue</span>   <span style="color:#94a3b8"># ja atribuido, pula</span>
+
+        <span style="color:#94a3b8"># Vizinho precisa estar PERTO verticalmente</span>
+        vizinho_y_centro = (vizinho.y1 + vizinho.y2) / <span style="color:#67e8f9">2</span>
+        distancia = <span style="color:#fbbf24">abs</span>(vizinho_y_centro - anchor_y_centro)
+        <span style="color:#c084fc">if</span> distancia &gt; anchor_altura * <span style="color:#67e8f9">2</span>:
+            <span style="color:#c084fc">continue</span>   <span style="color:#94a3b8"># muito longe verticalmente</span>
+
+        <span style="color:#94a3b8"># Vizinho precisa ter QUALQUER overlap com a regiao</span>
+        <span style="color:#94a3b8"># (NAO precisa ser &gt;= 50% como o anchor)</span>
+        <span style="color:#c084fc">if</span> ios(vizinho.bbox, regiao.bbox) &gt; <span style="color:#67e8f9">0</span>:
+            vizinho._anchor_regiao = regiao   <span style="color:#94a3b8"># HERDA tipo</span></pre>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- EXEMPLO CONCRETO -->
+  <!-- ============================================================ -->
+  <div id="exemplo"></div>
+  <h2>3. Exemplo concreto visualizado</h2>
+  <div class="section">
+    <div class="section-content">
+
+      <p>Pagina com <strong>3 regioes YOLO</strong> + <strong>5 blocos vetoriais</strong>:</p>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-box" style="background: rgba(220, 38, 38, 0.10); border: 2px dashed #dc2626;"></div>
+          <span>Regiao YOLO TITLE</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box" style="background: rgba(168, 85, 247, 0.10); border: 2px dashed #a855f7;"></div>
+          <span>Regiao YOLO LIST</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box" style="background: rgba(59, 130, 246, 0.10); border: 2px dashed #3b82f6;"></div>
+          <span>Regiao YOLO PARAGRAPH</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box" style="background: #f8fafc; border: 1.5px dashed #94a3b8;"></div>
+          <span>Bloco PyMuPDF (livre)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box" style="background: #fef3c7; border: 3px solid #f59e0b;"></div>
+          <span>Anchor (VIP)</span>
+        </div>
+      </div>
+
+      <h3>Estado inicial - tudo livre</h3>
+      <svg viewBox="0 0 600 600" width="100%" height="600">
+        <!-- 3 regioes YOLO -->
+        <rect class="yolo-box-title" x="50" y="40" width="500" height="80"/>
+        <text class="label label-title" x="60" y="32">YOLO: TITLE  conf=0.92</text>
+
+        <rect class="yolo-box-list" x="50" y="170" width="500" height="220"/>
+        <text class="label label-list" x="60" y="162">YOLO: LIST  conf=0.85</text>
+
+        <rect class="yolo-box-paragraph" x="50" y="430" width="500" height="140"/>
+        <text class="label label-paragraph" x="60" y="422">YOLO: PARAGRAPH  conf=0.78</text>
+
+        <!-- 5 blocos vetoriais -->
+        <rect class="bloco-livre" x="60" y="60" width="480" height="40"/>
+        <text class="label" x="70" y="85">B1: "Aula 04 - Redes" (livre)</text>
+
+        <rect class="bloco-livre" x="60" y="200" width="480" height="40"/>
+        <text class="label" x="70" y="225">B2: "- Hardware" (livre)</text>
+
+        <rect class="bloco-livre" x="60" y="260" width="480" height="40"/>
+        <text class="label" x="70" y="285">B3: "- Software" (livre)</text>
+
+        <rect class="bloco-livre" x="60" y="320" width="480" height="40"/>
+        <text class="label" x="70" y="345">B4: "- Redes" (livre)</text>
+
+        <rect class="bloco-livre" x="60" y="450" width="480" height="100"/>
+        <text class="label" x="70" y="478">B5: "Sistema de telecom..." (livre)</text>
+        <text class="label" x="70" y="498" style="fill:#666; font-size:10px;">"...componentes:"</text>
+      </svg>
+
+      <h3>Iteracao 1 — processa TITLE (confidence mais alta)</h3>
+      <pre>Acha anchor (MAIOR IoS):
+  B1 vs TITLE: <span style="color:#67e8f9">IoS = 0.95</span>  &lt;-- ANCHOR
+  B2 vs TITLE: IoS = 0.0
+  B3, B4, B5 vs TITLE: 0.0
+
+ios_anchor 0.95 &gt;= 0.50 -&gt; CASA
+
+Propaga vizinhos:
+  B1 esta em y=60-100 (centro 80, altura 40)
+  Range vizinhos: y centro entre 0 e 160 (centro +/- 80)
+
+  B2 esta em y=200-240 (centro 220) -&gt; distancia 140 &gt; 80, NAO eh vizinho
+  B3, B4, B5 -&gt; muito longe</pre>
+
+      <svg viewBox="0 0 600 600" width="100%" height="600">
+        <rect class="yolo-box-title" x="50" y="40" width="500" height="80"/>
+        <text class="label label-title" x="60" y="32">YOLO: TITLE  conf=0.92  - PROCESSADO</text>
+
+        <rect class="yolo-box-list" x="50" y="170" width="500" height="220"/>
+        <text class="label label-list" x="60" y="162">YOLO: LIST  conf=0.85</text>
+
+        <rect class="yolo-box-paragraph" x="50" y="430" width="500" height="140"/>
+        <text class="label label-paragraph" x="60" y="422">YOLO: PARAGRAPH  conf=0.78</text>
+
+        <!-- B1 = anchor -->
+        <rect class="bloco-anchor" x="60" y="60" width="480" height="40"/>
+        <text class="label" x="70" y="85">B1: "Aula 04 - Redes"  ← ANCHOR (TITLE)</text>
+        <text class="ancla-mark" x="525" y="86">★</text>
+
+        <rect class="bloco-livre" x="60" y="200" width="480" height="40"/>
+        <text class="label" x="70" y="225">B2: "- Hardware" (livre)</text>
+
+        <rect class="bloco-livre" x="60" y="260" width="480" height="40"/>
+        <text class="label" x="70" y="285">B3: "- Software" (livre)</text>
+
+        <rect class="bloco-livre" x="60" y="320" width="480" height="40"/>
+        <text class="label" x="70" y="345">B4: "- Redes" (livre)</text>
+
+        <rect class="bloco-livre" x="60" y="450" width="480" height="100"/>
+        <text class="label" x="70" y="478">B5: "Sistema de telecom..." (livre)</text>
+      </svg>
+
+      <h3>Iteracao 2 — processa LIST</h3>
+      <pre>Acha anchor (entre disponiveis):
+  B2 vs LIST: <span style="color:#67e8f9">IoS = 0.95</span>  &lt;-- ANCHOR
+  B3 vs LIST: IoS = 0.85
+  B4 vs LIST: IoS = 0.50
+  B5 vs LIST: IoS = 0.0
+
+ios_anchor 0.95 &gt;= 0.50 -&gt; CASA
+
+Propaga vizinhos:
+  B2 esta em y=200-240 (centro 220, altura 40)
+  Range vizinhos: y centro entre 140 e 300 (centro +/- 80)
+
+  B3 (centro 280) -&gt; distancia 60 &lt;= 80 ✓ vizinho
+        IoS(B3, LIST) = 0.85 &gt; 0 ✓ HERDA tipo LIST
+
+  B4 (centro 340) -&gt; distancia 120 &gt; 80 NAO eh vizinho
+
+  B5 -&gt; muito longe</pre>
+
+      <svg viewBox="0 0 600 600" width="100%" height="600">
+        <rect class="yolo-box-title" x="50" y="40" width="500" height="80"/>
+        <text class="label label-title" x="60" y="32">YOLO: TITLE  - DONE</text>
+
+        <rect class="yolo-box-list" x="50" y="170" width="500" height="220"/>
+        <text class="label label-list" x="60" y="162">YOLO: LIST  conf=0.85  - PROCESSANDO</text>
+
+        <rect class="yolo-box-paragraph" x="50" y="430" width="500" height="140"/>
+        <text class="label label-paragraph" x="60" y="422">YOLO: PARAGRAPH</text>
+
+        <rect class="bloco-titulo" x="60" y="60" width="480" height="40"/>
+        <text class="label" x="70" y="85">B1: TITLE</text>
+
+        <!-- B2 anchor LIST -->
+        <rect class="bloco-anchor" x="60" y="200" width="480" height="40"/>
+        <text class="label" x="70" y="225">B2: "- Hardware"  ← ANCHOR (LIST)</text>
+        <text class="ancla-mark" x="525" y="226">★</text>
+
+        <!-- B3 vizinho LIST -->
+        <rect class="bloco-vizinho" x="60" y="260" width="480" height="40"/>
+        <text class="label" x="70" y="285">B3: "- Software"  ← vizinho herda LIST</text>
+
+        <rect class="bloco-livre" x="60" y="320" width="480" height="40"/>
+        <text class="label" x="70" y="345">B4: "- Redes" (livre, fora da faixa Y do anchor)</text>
+
+        <rect class="bloco-livre" x="60" y="450" width="480" height="100"/>
+        <text class="label" x="70" y="478">B5: "Sistema..." (livre)</text>
+      </svg>
+
+      <h3>Iteracao 3 — processa PARAGRAPH</h3>
+      <pre>candidatos disponiveis: [B4, B5]
+
+Acha anchor:
+  B4 vs PARAGRAPH: IoS = 0.10  (raspão na borda)
+  B5 vs PARAGRAPH: <span style="color:#67e8f9">IoS = 0.95</span>  &lt;-- ANCHOR
+
+ios_anchor 0.95 &gt;= 0.50 -&gt; CASA
+
+Propaga vizinhos:
+  B5 esta em y=450-550 (centro 500, altura 100)
+  Range vizinhos: y centro entre 300 e 700 (centro +/- 200)
+
+  B4 (centro 340) -&gt; distancia 160 &lt;= 200 ✓ vizinho
+        IoS(B4, PARAGRAPH) = 0.10 &gt; 0 ✓ HERDA tipo PARAGRAPH</pre>
+
+      <svg viewBox="0 0 600 600" width="100%" height="600">
+        <rect class="yolo-box-title" x="50" y="40" width="500" height="80"/>
+        <rect class="yolo-box-list" x="50" y="170" width="500" height="220"/>
+        <rect class="yolo-box-paragraph" x="50" y="430" width="500" height="140"/>
+        <text class="label label-paragraph" x="60" y="422">YOLO: PARAGRAPH  - PROCESSANDO</text>
+
+        <rect class="bloco-titulo" x="60" y="60" width="480" height="40"/>
+        <text class="label" x="70" y="85">B1: TITLE</text>
+
+        <rect class="bloco-list" x="60" y="200" width="480" height="40"/>
+        <text class="label" x="70" y="225">B2: LIST (anchor)</text>
+
+        <rect class="bloco-list" x="60" y="260" width="480" height="40"/>
+        <text class="label" x="70" y="285">B3: LIST (vizinho)</text>
+
+        <!-- B4 PARAGRAPH (vizinho de B5) -->
+        <rect class="bloco-vizinho" x="60" y="320" width="480" height="40"/>
+        <text class="label" x="70" y="345">B4: "- Redes" ← vizinho de B5, herda PARAGRAPH</text>
+
+        <!-- B5 anchor -->
+        <rect class="bloco-anchor" x="60" y="450" width="480" height="100"/>
+        <text class="label" x="70" y="478">B5: "Sistema..." ← ANCHOR (PARAGRAPH)</text>
+        <text class="ancla-mark" x="525" y="479">★</text>
+      </svg>
+
+      <div class="destaque">
+        <strong>Estado FINAL:</strong>
+        <ul style="margin: 8px 0 0 0;">
+          <li>B1: <span class="label-title">TITLE</span> (anchor)</li>
+          <li>B2: <span class="label-list">LIST</span> (anchor)</li>
+          <li>B3: <span class="label-list">LIST</span> (vizinho de B2)</li>
+          <li>B4: <span class="label-paragraph">PARAGRAPH</span> (vizinho de B5) ← propagado em vez de LIST</li>
+          <li>B5: <span class="label-paragraph">PARAGRAPH</span> (anchor)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- VS BEST MATCH -->
+  <!-- ============================================================ -->
+  <div id="vsbest"></div>
+  <h2>4. Anchor vs Best Match — caso onde anchor SALVA</h2>
+  <div class="section">
+    <div class="section-content">
+
+      <p>Imagine bloco vetorial que esta na <strong>fronteira entre 2 regioes</strong>:</p>
+
+      <pre>Bloco "- Conclusao":
+  IoS com LIST: 0.45  (toca borda inferior da LIST)
+  IoS com PARAGRAPH: 0.50  (toca borda superior da PARAGRAPH)</pre>
+
+      <div class="resultado-grid">
+
+        <div class="card card-best">
+          <h5>Best Match Puro</h5>
+          <pre style="font-size: 12px;">Maior IoS = PARAGRAPH (0.50)
+-&gt; bloco vira PARAGRAPH ❌
+
+(deveria ser LIST — esta logo
+abaixo de "- Hardware",
+"- Software" que sao da lista)</pre>
+        </div>
+
+        <div class="card card-anchor">
+          <h5>Anchor + Propagacao</h5>
+          <pre style="font-size: 12px;">B2 "- Hardware" virou anchor da LIST.
+Vizinhos do anchor: bloco "- Conclusao"
+esta na faixa Y do B2.
+
+IoS(- Conclusao, LIST) = 0.45 &gt; 0 ✓
+-&gt; HERDA tipo LIST ✅
+
+Propagacao do "VIP" supera
+o best match local.</pre>
+        </div>
+
+      </div>
+
+      <p style="margin-top: 16px;">
+        <strong>Esse eh o ganho real do anchor:</strong> resgate de blocos de
+        fronteira que pelo IoS local iriam pro lugar errado mas pertencem ao
+        mesmo grupo do anchor.
+      </p>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TRADE-OFF -->
+  <!-- ============================================================ -->
+  <div id="tradeoff"></div>
+  <h2>5. Trade-off — quando anchor pode propagar errado</h2>
+  <div class="section">
+    <div class="section-content">
+
+      <p>O mesmo mecanismo que salva pode <strong>errar em casos opostos:</strong></p>
+
+      <pre>Bloco "- Redes" tem:
+  IoS com LIST: 0.50  (era da lista correta)
+  IoS com PARAGRAPH: 0.10  (raspão)
+
+Mas o anchor da PARAGRAPH (B5 "Sistema...") esta logo abaixo,
+na faixa Y de propagacao.</pre>
+
+      <div class="resultado-grid">
+
+        <div class="card card-anchor" style="background: #fef2f2; border-color: #ef4444;">
+          <h5 style="color: #b91c1c;">Anchor (caso errado)</h5>
+          <pre style="font-size: 12px;">B5 "Sistema..." virou anchor PARAGRAPH.
+"- Redes" esta na faixa Y do B5.
+
+IoS(- Redes, PARAGRAPH) = 0.10 &gt; 0 ✓
+-&gt; HERDA tipo PARAGRAPH ❌
+
+(deveria ser LIST porque IoS
+direto era 0.50, maior!)</pre>
+        </div>
+
+        <div class="card card-anchor">
+          <h5>Best Match Puro</h5>
+          <pre style="font-size: 12px;">Maior IoS = LIST (0.50)
+-&gt; bloco vira LIST ✅
+
+Best match local acerta nesse caso.</pre>
+        </div>
+
+      </div>
+
+      <p>Por que funciona no agregado mesmo assim:</p>
+      <ul>
+        <li>Casos "salvos" (bloco fronteira que propagacao acerta) sao <strong>mais frequentes</strong> que casos "errados"</li>
+        <li>Listas costumam ter varios items consecutivos — anchor pega bem</li>
+        <li>Paragrafos longos costumam ter varios blocos vetoriais — anchor une</li>
+        <li>Net result: <strong>+0.4pp em cobertura</strong> vs best match puro</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ORDENACAO -->
+  <!-- ============================================================ -->
+  <div id="porque"></div>
+  <h2>6. Por que ordenar por YOLO confidence</h2>
+  <div class="section">
+    <div class="section-content">
+
+      <pre><span style="color:#94a3b8"># SEM ordenacao (loop natural):</span>
+R1 baixa confidence vai primeiro
+Anchor cai num bloco "duvidoso"
+Propaga tipo errado pra vizinhos
+R2 alta confidence vem depois — vizinhos ja atribuidos, perdeu
+
+<span style="color:#94a3b8"># COM ordenacao por confidence DESC:</span>
+Regioes em que YOLO eh mais seguro processadas primeiro
+Anchors "consolidados" sao escolhidos primeiro
+Vizinhos herdam tipo de fontes confiaveis
+Regioes duvidosas vem depois e pegam so o que sobrou</pre>
+
+      <div class="destaque">
+        <strong>Insight:</strong> a ordem de processamento eh tao importante
+        quanto o algoritmo. Mesma logica + ordem diferente = resultados diferentes.
+        Por isso documentamos explicitamente.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- RESUMO -->
+  <!-- ============================================================ -->
+  <h2 style="background: linear-gradient(135deg, #1e293b, #0f172a);">Resumo final</h2>
+  <div class="section">
+    <div class="section-content">
+
+      <h3>O que o anchor faz:</h3>
+      <ol>
+        <li>Pra cada regiao YOLO (em ordem de confidence): elege "anchor" = bloco vetorial mais sobreposto</li>
+        <li>Anchor casa se IoS &gt;= 50%</li>
+        <li>Vizinhos verticais do anchor (mesma faixa Y, qualquer overlap) HERDAM o tipo automaticamente</li>
+        <li>Blocos sem anchor proximo: vao pro fallback "paragraph"</li>
+      </ol>
+
+      <h3>Por que venceu:</h3>
+      <ul>
+        <li><strong>+0.4pp cobertura</strong>: salva blocos de fronteira via propagacao</li>
+        <li><strong>+0.4pp levenshtein</strong>: blocos "consistentes" no mesmo cluster</li>
+        <li><strong>+0.1pp bigramas</strong>: ordem dos blocos preservada melhor</li>
+        <li><strong>tempo identico</strong>: pre-processamento eh O(M*N) igual ao matching simples</li>
+      </ul>
+
+      <h3>Trade-off:</h3>
+      <ul>
+        <li>-0.3 tipos medios: vizinhos perdem diferenciacao individual</li>
+        <li>Pode propagar errado em casos especificos (compensado por casos onde acerta)</li>
+      </ul>
+
+      <h3>Vencedor consolidado pra produto RAG:</h3>
+      <pre>Score combinado pra RAG (cob × qexc):
+  anchor:         0.789 × 0.805 = <span style="color:#67e8f9; font-weight:700">0.635</span> ← VENCE
+  best_0 (atual): 0.784 × 0.780 = 0.612
+  greedy_05:      0.785 × 0.805 = 0.632
+  score_composto: 0.785 × 0.805 = 0.632</pre>
+
+    </div>
+  </div>
+
+</body>
+</html>

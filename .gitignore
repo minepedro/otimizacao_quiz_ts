@@ -58,6 +58,7 @@ resultados/*
 !resultados/benchmark-matchers.json
 !resultados/visualizacao_threshold.html
 !resultados/visualizacao_3_pipelines.html
+!resultados/visualizacao_anchor.html
 !resultados/raio-x/
 resultados/raio-x/*
 !resultados/raio-x/.gitkeep
