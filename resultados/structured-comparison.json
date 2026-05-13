@@ -1,0 +1,1216 @@
+{
+  "Aula 04 - Redes de Computadores": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 101,
+        "n_blocks_b": 263,
+        "n_casados": 87,
+        "n_tipo_concorda": 27,
+        "taxa_match": 0.8614,
+        "taxa_tipo": 0.3103,
+        "iou_medio_pares": 0.164,
+        "distribuicao_a": {
+          "paragraph": 54,
+          "title": 32,
+          "image": 12,
+          "header": 2,
+          "caption": 1
+        },
+        "distribuicao_b": {
+          "title": 39,
+          "paragraph": 111,
+          "list_item": 64,
+          "caption": 1,
+          "footer": 3,
+          "image": 45
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 101,
+        "n_blocks_b": 180,
+        "n_casados": 88,
+        "n_tipo_concorda": 69,
+        "taxa_match": 0.8713,
+        "taxa_tipo": 0.7841,
+        "iou_medio_pares": 0.193,
+        "distribuicao_a": {
+          "paragraph": 54,
+          "title": 32,
+          "image": 12,
+          "header": 2,
+          "caption": 1
+        },
+        "distribuicao_b": {
+          "title": 53,
+          "paragraph": 108,
+          "image": 19
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 263,
+        "n_blocks_b": 101,
+        "n_casados": 86,
+        "n_tipo_concorda": 27,
+        "taxa_match": 0.327,
+        "taxa_tipo": 0.314,
+        "iou_medio_pares": 0.164,
+        "distribuicao_a": {
+          "title": 39,
+          "paragraph": 111,
+          "list_item": 64,
+          "caption": 1,
+          "footer": 3,
+          "image": 45
+        },
+        "distribuicao_b": {
+          "paragraph": 54,
+          "title": 32,
+          "image": 12,
+          "header": 2,
+          "caption": 1
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 263,
+        "n_blocks_b": 180,
+        "n_casados": 113,
+        "n_tipo_concorda": 46,
+        "taxa_match": 0.4297,
+        "taxa_tipo": 0.4071,
+        "iou_medio_pares": 0.163,
+        "distribuicao_a": {
+          "title": 39,
+          "paragraph": 111,
+          "list_item": 64,
+          "caption": 1,
+          "footer": 3,
+          "image": 45
+        },
+        "distribuicao_b": {
+          "title": 53,
+          "paragraph": 108,
+          "image": 19
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 180,
+        "n_blocks_b": 101,
+        "n_casados": 88,
+        "n_tipo_concorda": 71,
+        "taxa_match": 0.4889,
+        "taxa_tipo": 0.8068,
+        "iou_medio_pares": 0.195,
+        "distribuicao_a": {
+          "title": 53,
+          "paragraph": 108,
+          "image": 19
+        },
+        "distribuicao_b": {
+          "paragraph": 54,
+          "title": 32,
+          "image": 12,
+          "header": 2,
+          "caption": 1
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 180,
+        "n_blocks_b": 263,
+        "n_casados": 123,
+        "n_tipo_concorda": 57,
+        "taxa_match": 0.6833,
+        "taxa_tipo": 0.4634,
+        "iou_medio_pares": 0.163,
+        "distribuicao_a": {
+          "title": 53,
+          "paragraph": 108,
+          "image": 19
+        },
+        "distribuicao_b": {
+          "title": 39,
+          "paragraph": 111,
+          "list_item": 64,
+          "caption": 1,
+          "footer": 3,
+          "image": 45
+        }
+      }
+    }
+  },
+  "Aula+03+-+Revis_C3_A3o+de+probabilidade+2": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 68,
+        "n_blocks_b": 158,
+        "n_casados": 57,
+        "n_tipo_concorda": 31,
+        "taxa_match": 0.8382,
+        "taxa_tipo": 0.5439,
+        "iou_medio_pares": 0.217,
+        "distribuicao_a": {
+          "image": 6,
+          "title": 11,
+          "paragraph": 40,
+          "header": 10,
+          "formula": 1
+        },
+        "distribuicao_b": {
+          "paragraph": 75,
+          "title": 14,
+          "list_item": 28,
+          "footer": 15,
+          "formula": 1,
+          "caption": 2,
+          "image": 23
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 68,
+        "n_blocks_b": 106,
+        "n_casados": 54,
+        "n_tipo_concorda": 40,
+        "taxa_match": 0.7941,
+        "taxa_tipo": 0.7407,
+        "iou_medio_pares": 0.009,
+        "distribuicao_a": {
+          "image": 6,
+          "title": 11,
+          "paragraph": 40,
+          "header": 10,
+          "formula": 1
+        },
+        "distribuicao_b": {
+          "image": 7,
+          "title": 7,
+          "paragraph": 92
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 158,
+        "n_blocks_b": 68,
+        "n_casados": 59,
+        "n_tipo_concorda": 29,
+        "taxa_match": 0.3734,
+        "taxa_tipo": 0.4915,
+        "iou_medio_pares": 0.217,
+        "distribuicao_a": {
+          "paragraph": 75,
+          "title": 14,
+          "list_item": 28,
+          "footer": 15,
+          "formula": 1,
+          "caption": 2,
+          "image": 23
+        },
+        "distribuicao_b": {
+          "image": 6,
+          "title": 11,
+          "paragraph": 40,
+          "header": 10,
+          "formula": 1
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 158,
+        "n_blocks_b": 106,
+        "n_casados": 70,
+        "n_tipo_concorda": 31,
+        "taxa_match": 0.443,
+        "taxa_tipo": 0.4429,
+        "iou_medio_pares": 0.033,
+        "distribuicao_a": {
+          "paragraph": 75,
+          "title": 14,
+          "list_item": 28,
+          "footer": 15,
+          "formula": 1,
+          "caption": 2,
+          "image": 23
+        },
+        "distribuicao_b": {
+          "image": 7,
+          "title": 7,
+          "paragraph": 92
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 106,
+        "n_blocks_b": 68,
+        "n_casados": 52,
+        "n_tipo_concorda": 37,
+        "taxa_match": 0.4906,
+        "taxa_tipo": 0.7115,
+        "iou_medio_pares": 0.009,
+        "distribuicao_a": {
+          "image": 7,
+          "title": 7,
+          "paragraph": 92
+        },
+        "distribuicao_b": {
+          "image": 6,
+          "title": 11,
+          "paragraph": 40,
+          "header": 10,
+          "formula": 1
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 106,
+        "n_blocks_b": 158,
+        "n_casados": 70,
+        "n_tipo_concorda": 30,
+        "taxa_match": 0.6604,
+        "taxa_tipo": 0.4286,
+        "iou_medio_pares": 0.033,
+        "distribuicao_a": {
+          "image": 7,
+          "title": 7,
+          "paragraph": 92
+        },
+        "distribuicao_b": {
+          "paragraph": 75,
+          "title": 14,
+          "list_item": 28,
+          "footer": 15,
+          "formula": 1,
+          "caption": 2,
+          "image": 23
+        }
+      }
+    }
+  },
+  "Aula+04+%28resolu%C3%A7%C3%A3o%29": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 18,
+        "n_blocks_b": 120,
+        "n_casados": 0,
+        "n_tipo_concorda": 0,
+        "taxa_match": 0.0,
+        "taxa_tipo": 0.0,
+        "iou_medio_pares": 0.0,
+        "distribuicao_a": {
+          "formula": 10,
+          "image": 8
+        },
+        "distribuicao_b": {
+          "paragraph": 112,
+          "formula": 2,
+          "image": 6
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 18,
+        "n_blocks_b": 44,
+        "n_casados": 0,
+        "n_tipo_concorda": 0,
+        "taxa_match": 0.0,
+        "taxa_tipo": 0.0,
+        "iou_medio_pares": 0.0,
+        "distribuicao_a": {
+          "formula": 10,
+          "image": 8
+        },
+        "distribuicao_b": {
+          "formula": 41,
+          "paragraph": 2,
+          "table": 1
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 120,
+        "n_blocks_b": 18,
+        "n_casados": 0,
+        "n_tipo_concorda": 0,
+        "taxa_match": 0.0,
+        "taxa_tipo": 0.0,
+        "iou_medio_pares": 0.0,
+        "distribuicao_a": {
+          "paragraph": 112,
+          "formula": 2,
+          "image": 6
+        },
+        "distribuicao_b": {
+          "formula": 10,
+          "image": 8
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 120,
+        "n_blocks_b": 44,
+        "n_casados": 0,
+        "n_tipo_concorda": 0,
+        "taxa_match": 0.0,
+        "taxa_tipo": 0.0,
+        "iou_medio_pares": 0.0,
+        "distribuicao_a": {
+          "paragraph": 112,
+          "formula": 2,
+          "image": 6
+        },
+        "distribuicao_b": {
+          "formula": 41,
+          "paragraph": 2,
+          "table": 1
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 44,
+        "n_blocks_b": 18,
+        "n_casados": 0,
+        "n_tipo_concorda": 0,
+        "taxa_match": 0.0,
+        "taxa_tipo": 0.0,
+        "iou_medio_pares": 0.0,
+        "distribuicao_a": {
+          "formula": 41,
+          "paragraph": 2,
+          "table": 1
+        },
+        "distribuicao_b": {
+          "formula": 10,
+          "image": 8
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 44,
+        "n_blocks_b": 120,
+        "n_casados": 7,
+        "n_tipo_concorda": 0,
+        "taxa_match": 0.1591,
+        "taxa_tipo": 0.0,
+        "iou_medio_pares": 0.021,
+        "distribuicao_a": {
+          "formula": 41,
+          "paragraph": 2,
+          "table": 1
+        },
+        "distribuicao_b": {
+          "paragraph": 112,
+          "formula": 2,
+          "image": 6
+        }
+      }
+    }
+  },
+  "Aula+2+-+Economia+como+Ci_C3_AAncia+Social": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 62,
+        "n_blocks_b": 110,
+        "n_casados": 57,
+        "n_tipo_concorda": 37,
+        "taxa_match": 0.9194,
+        "taxa_tipo": 0.6491,
+        "iou_medio_pares": 0.054,
+        "distribuicao_a": {
+          "image": 2,
+          "title": 13,
+          "paragraph": 45,
+          "header": 2
+        },
+        "distribuicao_b": {
+          "paragraph": 53,
+          "title": 18,
+          "list_item": 25,
+          "image": 14
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 62,
+        "n_blocks_b": 99,
+        "n_casados": 55,
+        "n_tipo_concorda": 44,
+        "taxa_match": 0.8871,
+        "taxa_tipo": 0.8,
+        "iou_medio_pares": 0.2,
+        "distribuicao_a": {
+          "image": 2,
+          "title": 13,
+          "paragraph": 45,
+          "header": 2
+        },
+        "distribuicao_b": {
+          "title": 23,
+          "paragraph": 73,
+          "image": 3
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 110,
+        "n_blocks_b": 62,
+        "n_casados": 57,
+        "n_tipo_concorda": 37,
+        "taxa_match": 0.5182,
+        "taxa_tipo": 0.6491,
+        "iou_medio_pares": 0.054,
+        "distribuicao_a": {
+          "paragraph": 53,
+          "title": 18,
+          "list_item": 25,
+          "image": 14
+        },
+        "distribuicao_b": {
+          "image": 2,
+          "title": 13,
+          "paragraph": 45,
+          "header": 2
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 110,
+        "n_blocks_b": 99,
+        "n_casados": 67,
+        "n_tipo_concorda": 38,
+        "taxa_match": 0.6091,
+        "taxa_tipo": 0.5672,
+        "iou_medio_pares": 0.124,
+        "distribuicao_a": {
+          "paragraph": 53,
+          "title": 18,
+          "list_item": 25,
+          "image": 14
+        },
+        "distribuicao_b": {
+          "title": 23,
+          "paragraph": 73,
+          "image": 3
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 99,
+        "n_blocks_b": 62,
+        "n_casados": 55,
+        "n_tipo_concorda": 44,
+        "taxa_match": 0.5556,
+        "taxa_tipo": 0.8,
+        "iou_medio_pares": 0.2,
+        "distribuicao_a": {
+          "title": 23,
+          "paragraph": 73,
+          "image": 3
+        },
+        "distribuicao_b": {
+          "image": 2,
+          "title": 13,
+          "paragraph": 45,
+          "header": 2
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 99,
+        "n_blocks_b": 110,
+        "n_casados": 72,
+        "n_tipo_concorda": 43,
+        "taxa_match": 0.7273,
+        "taxa_tipo": 0.5972,
+        "iou_medio_pares": 0.124,
+        "distribuicao_a": {
+          "title": 23,
+          "paragraph": 73,
+          "image": 3
+        },
+        "distribuicao_b": {
+          "paragraph": 53,
+          "title": 18,
+          "list_item": 25,
+          "image": 14
+        }
+      }
+    }
+  },
+  "EPM 309 - Aula 3 - Introdução ao Sistema Toyota de Produção STP-1": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 61,
+        "n_blocks_b": 225,
+        "n_casados": 49,
+        "n_tipo_concorda": 38,
+        "taxa_match": 0.8033,
+        "taxa_tipo": 0.7755,
+        "iou_medio_pares": 0.076,
+        "distribuicao_a": {
+          "image": 15,
+          "title": 21,
+          "paragraph": 23,
+          "header": 2
+        },
+        "distribuicao_b": {
+          "title": 34,
+          "paragraph": 118,
+          "list_item": 36,
+          "caption": 2,
+          "footer": 1,
+          "image": 34
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 61,
+        "n_blocks_b": 174,
+        "n_casados": 48,
+        "n_tipo_concorda": 35,
+        "taxa_match": 0.7869,
+        "taxa_tipo": 0.7292,
+        "iou_medio_pares": 0.245,
+        "distribuicao_a": {
+          "image": 15,
+          "title": 21,
+          "paragraph": 23,
+          "header": 2
+        },
+        "distribuicao_b": {
+          "paragraph": 123,
+          "image": 21,
+          "title": 30
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 225,
+        "n_blocks_b": 61,
+        "n_casados": 48,
+        "n_tipo_concorda": 38,
+        "taxa_match": 0.2133,
+        "taxa_tipo": 0.7917,
+        "iou_medio_pares": 0.076,
+        "distribuicao_a": {
+          "title": 34,
+          "paragraph": 118,
+          "list_item": 36,
+          "caption": 2,
+          "footer": 1,
+          "image": 34
+        },
+        "distribuicao_b": {
+          "image": 15,
+          "title": 21,
+          "paragraph": 23,
+          "header": 2
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 225,
+        "n_blocks_b": 174,
+        "n_casados": 115,
+        "n_tipo_concorda": 72,
+        "taxa_match": 0.5111,
+        "taxa_tipo": 0.6261,
+        "iou_medio_pares": 0.125,
+        "distribuicao_a": {
+          "title": 34,
+          "paragraph": 118,
+          "list_item": 36,
+          "caption": 2,
+          "footer": 1,
+          "image": 34
+        },
+        "distribuicao_b": {
+          "paragraph": 123,
+          "image": 21,
+          "title": 30
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 174,
+        "n_blocks_b": 61,
+        "n_casados": 46,
+        "n_tipo_concorda": 35,
+        "taxa_match": 0.2644,
+        "taxa_tipo": 0.7609,
+        "iou_medio_pares": 0.251,
+        "distribuicao_a": {
+          "paragraph": 123,
+          "image": 21,
+          "title": 30
+        },
+        "distribuicao_b": {
+          "image": 15,
+          "title": 21,
+          "paragraph": 23,
+          "header": 2
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 174,
+        "n_blocks_b": 225,
+        "n_casados": 121,
+        "n_tipo_concorda": 79,
+        "taxa_match": 0.6954,
+        "taxa_tipo": 0.6529,
+        "iou_medio_pares": 0.125,
+        "distribuicao_a": {
+          "paragraph": 123,
+          "image": 21,
+          "title": 30
+        },
+        "distribuicao_b": {
+          "title": 34,
+          "paragraph": 118,
+          "list_item": 36,
+          "caption": 2,
+          "footer": 1,
+          "image": 34
+        }
+      }
+    }
+  },
+  "EPM 309 - Aula 6 - PokaYoke": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 43,
+        "n_blocks_b": 139,
+        "n_casados": 35,
+        "n_tipo_concorda": 19,
+        "taxa_match": 0.814,
+        "taxa_tipo": 0.5429,
+        "iou_medio_pares": 0.061,
+        "distribuicao_a": {
+          "image": 10,
+          "title": 15,
+          "paragraph": 16,
+          "table": 2
+        },
+        "distribuicao_b": {
+          "title": 18,
+          "paragraph": 47,
+          "list_item": 40,
+          "caption": 3,
+          "header": 1,
+          "image": 30
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 43,
+        "n_blocks_b": 86,
+        "n_casados": 33,
+        "n_tipo_concorda": 27,
+        "taxa_match": 0.7674,
+        "taxa_tipo": 0.8182,
+        "iou_medio_pares": 0.273,
+        "distribuicao_a": {
+          "image": 10,
+          "title": 15,
+          "paragraph": 16,
+          "table": 2
+        },
+        "distribuicao_b": {
+          "paragraph": 55,
+          "image": 15,
+          "title": 14,
+          "table": 2
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 139,
+        "n_blocks_b": 43,
+        "n_casados": 34,
+        "n_tipo_concorda": 19,
+        "taxa_match": 0.2446,
+        "taxa_tipo": 0.5588,
+        "iou_medio_pares": 0.061,
+        "distribuicao_a": {
+          "title": 18,
+          "paragraph": 47,
+          "list_item": 40,
+          "caption": 3,
+          "header": 1,
+          "image": 30
+        },
+        "distribuicao_b": {
+          "image": 10,
+          "title": 15,
+          "paragraph": 16,
+          "table": 2
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 139,
+        "n_blocks_b": 86,
+        "n_casados": 51,
+        "n_tipo_concorda": 26,
+        "taxa_match": 0.3669,
+        "taxa_tipo": 0.5098,
+        "iou_medio_pares": 0.158,
+        "distribuicao_a": {
+          "title": 18,
+          "paragraph": 47,
+          "list_item": 40,
+          "caption": 3,
+          "header": 1,
+          "image": 30
+        },
+        "distribuicao_b": {
+          "paragraph": 55,
+          "image": 15,
+          "title": 14,
+          "table": 2
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 86,
+        "n_blocks_b": 43,
+        "n_casados": 32,
+        "n_tipo_concorda": 28,
+        "taxa_match": 0.3721,
+        "taxa_tipo": 0.875,
+        "iou_medio_pares": 0.267,
+        "distribuicao_a": {
+          "paragraph": 55,
+          "image": 15,
+          "title": 14,
+          "table": 2
+        },
+        "distribuicao_b": {
+          "image": 10,
+          "title": 15,
+          "paragraph": 16,
+          "table": 2
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 86,
+        "n_blocks_b": 139,
+        "n_casados": 52,
+        "n_tipo_concorda": 27,
+        "taxa_match": 0.6047,
+        "taxa_tipo": 0.5192,
+        "iou_medio_pares": 0.158,
+        "distribuicao_a": {
+          "paragraph": 55,
+          "image": 15,
+          "title": 14,
+          "table": 2
+        },
+        "distribuicao_b": {
+          "title": 18,
+          "paragraph": 47,
+          "list_item": 40,
+          "caption": 3,
+          "header": 1,
+          "image": 30
+        }
+      }
+    }
+  },
+  "EPM309 - Aula 10 - Introdução ao 5S": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 98,
+        "n_blocks_b": 339,
+        "n_casados": 65,
+        "n_tipo_concorda": 37,
+        "taxa_match": 0.6633,
+        "taxa_tipo": 0.5692,
+        "iou_medio_pares": 0.017,
+        "distribuicao_a": {
+          "header": 5,
+          "title": 24,
+          "paragraph": 43,
+          "image": 22,
+          "table": 4
+        },
+        "distribuicao_b": {
+          "paragraph": 199,
+          "title": 39,
+          "list_item": 34,
+          "header": 3,
+          "image": 64
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 98,
+        "n_blocks_b": 178,
+        "n_casados": 72,
+        "n_tipo_concorda": 41,
+        "taxa_match": 0.7347,
+        "taxa_tipo": 0.5694,
+        "iou_medio_pares": 0.235,
+        "distribuicao_a": {
+          "header": 5,
+          "title": 24,
+          "paragraph": 43,
+          "image": 22,
+          "table": 4
+        },
+        "distribuicao_b": {
+          "title": 46,
+          "paragraph": 106,
+          "image": 21,
+          "table": 5
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 339,
+        "n_blocks_b": 98,
+        "n_casados": 67,
+        "n_tipo_concorda": 37,
+        "taxa_match": 0.1976,
+        "taxa_tipo": 0.5522,
+        "iou_medio_pares": 0.012,
+        "distribuicao_a": {
+          "paragraph": 199,
+          "title": 39,
+          "list_item": 34,
+          "header": 3,
+          "image": 64
+        },
+        "distribuicao_b": {
+          "header": 5,
+          "title": 24,
+          "paragraph": 43,
+          "image": 22,
+          "table": 4
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 339,
+        "n_blocks_b": 178,
+        "n_casados": 129,
+        "n_tipo_concorda": 75,
+        "taxa_match": 0.3805,
+        "taxa_tipo": 0.5814,
+        "iou_medio_pares": 0.058,
+        "distribuicao_a": {
+          "paragraph": 199,
+          "title": 39,
+          "list_item": 34,
+          "header": 3,
+          "image": 64
+        },
+        "distribuicao_b": {
+          "title": 46,
+          "paragraph": 106,
+          "image": 21,
+          "table": 5
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 178,
+        "n_blocks_b": 98,
+        "n_casados": 72,
+        "n_tipo_concorda": 41,
+        "taxa_match": 0.4045,
+        "taxa_tipo": 0.5694,
+        "iou_medio_pares": 0.235,
+        "distribuicao_a": {
+          "title": 46,
+          "paragraph": 106,
+          "image": 21,
+          "table": 5
+        },
+        "distribuicao_b": {
+          "header": 5,
+          "title": 24,
+          "paragraph": 43,
+          "image": 22,
+          "table": 4
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 178,
+        "n_blocks_b": 339,
+        "n_casados": 124,
+        "n_tipo_concorda": 72,
+        "taxa_match": 0.6966,
+        "taxa_tipo": 0.5806,
+        "iou_medio_pares": 0.061,
+        "distribuicao_a": {
+          "title": 46,
+          "paragraph": 106,
+          "image": 21,
+          "table": 5
+        },
+        "distribuicao_b": {
+          "paragraph": 199,
+          "title": 39,
+          "list_item": 34,
+          "header": 3,
+          "image": 64
+        }
+      }
+    }
+  },
+  "Manual Como Criar uma Pesquisa de Mercado": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 39,
+        "n_blocks_b": 9,
+        "n_casados": 4,
+        "n_tipo_concorda": 1,
+        "taxa_match": 0.1026,
+        "taxa_tipo": 0.25,
+        "iou_medio_pares": 0.0,
+        "distribuicao_a": {
+          "title": 20,
+          "paragraph": 19
+        },
+        "distribuicao_b": {
+          "list_item": 6,
+          "title": 2,
+          "image": 1
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 39,
+        "n_blocks_b": 65,
+        "n_casados": 34,
+        "n_tipo_concorda": 31,
+        "taxa_match": 0.8718,
+        "taxa_tipo": 0.9118,
+        "iou_medio_pares": 0.297,
+        "distribuicao_a": {
+          "title": 20,
+          "paragraph": 19
+        },
+        "distribuicao_b": {
+          "title": 25,
+          "paragraph": 39,
+          "image": 1
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 9,
+        "n_blocks_b": 39,
+        "n_casados": 4,
+        "n_tipo_concorda": 1,
+        "taxa_match": 0.4444,
+        "taxa_tipo": 0.25,
+        "iou_medio_pares": 0.0,
+        "distribuicao_a": {
+          "list_item": 6,
+          "title": 2,
+          "image": 1
+        },
+        "distribuicao_b": {
+          "title": 20,
+          "paragraph": 19
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 9,
+        "n_blocks_b": 65,
+        "n_casados": 8,
+        "n_tipo_concorda": 2,
+        "taxa_match": 0.8889,
+        "taxa_tipo": 0.25,
+        "iou_medio_pares": 0.069,
+        "distribuicao_a": {
+          "list_item": 6,
+          "title": 2,
+          "image": 1
+        },
+        "distribuicao_b": {
+          "title": 25,
+          "paragraph": 39,
+          "image": 1
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 65,
+        "n_blocks_b": 39,
+        "n_casados": 34,
+        "n_tipo_concorda": 31,
+        "taxa_match": 0.5231,
+        "taxa_tipo": 0.9118,
+        "iou_medio_pares": 0.297,
+        "distribuicao_a": {
+          "title": 25,
+          "paragraph": 39,
+          "image": 1
+        },
+        "distribuicao_b": {
+          "title": 20,
+          "paragraph": 19
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 65,
+        "n_blocks_b": 9,
+        "n_casados": 8,
+        "n_tipo_concorda": 2,
+        "taxa_match": 0.1231,
+        "taxa_tipo": 0.25,
+        "iou_medio_pares": 0.069,
+        "distribuicao_a": {
+          "title": 25,
+          "paragraph": 39,
+          "image": 1
+        },
+        "distribuicao_b": {
+          "list_item": 6,
+          "title": 2,
+          "image": 1
+        }
+      }
+    }
+  },
+  "Realismo": {
+    "hibrido-layout-aware": {
+      "docling-native": {
+        "n_blocks_a": 65,
+        "n_blocks_b": 96,
+        "n_casados": 50,
+        "n_tipo_concorda": 32,
+        "taxa_match": 0.7692,
+        "taxa_tipo": 0.64,
+        "iou_medio_pares": 0.084,
+        "distribuicao_a": {
+          "paragraph": 61,
+          "table": 1,
+          "image": 3
+        },
+        "distribuicao_b": {
+          "paragraph": 54,
+          "title": 10,
+          "list_item": 15,
+          "caption": 1,
+          "image": 15,
+          "table": 1
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 65,
+        "n_blocks_b": 87,
+        "n_casados": 52,
+        "n_tipo_concorda": 41,
+        "taxa_match": 0.8,
+        "taxa_tipo": 0.7885,
+        "iou_medio_pares": 0.101,
+        "distribuicao_a": {
+          "paragraph": 61,
+          "table": 1,
+          "image": 3
+        },
+        "distribuicao_b": {
+          "title": 10,
+          "paragraph": 61,
+          "image": 15,
+          "table": 1
+        }
+      }
+    },
+    "docling-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 96,
+        "n_blocks_b": 65,
+        "n_casados": 55,
+        "n_tipo_concorda": 36,
+        "taxa_match": 0.5729,
+        "taxa_tipo": 0.6545,
+        "iou_medio_pares": 0.084,
+        "distribuicao_a": {
+          "paragraph": 54,
+          "title": 10,
+          "list_item": 15,
+          "caption": 1,
+          "image": 15,
+          "table": 1
+        },
+        "distribuicao_b": {
+          "paragraph": 61,
+          "table": 1,
+          "image": 3
+        }
+      },
+      "mineru-native": {
+        "n_blocks_a": 96,
+        "n_blocks_b": 87,
+        "n_casados": 68,
+        "n_tipo_concorda": 53,
+        "taxa_match": 0.7083,
+        "taxa_tipo": 0.7794,
+        "iou_medio_pares": 0.229,
+        "distribuicao_a": {
+          "paragraph": 54,
+          "title": 10,
+          "list_item": 15,
+          "caption": 1,
+          "image": 15,
+          "table": 1
+        },
+        "distribuicao_b": {
+          "title": 10,
+          "paragraph": 61,
+          "image": 15,
+          "table": 1
+        }
+      }
+    },
+    "mineru-native": {
+      "hibrido-layout-aware": {
+        "n_blocks_a": 87,
+        "n_blocks_b": 65,
+        "n_casados": 52,
+        "n_tipo_concorda": 41,
+        "taxa_match": 0.5977,
+        "taxa_tipo": 0.7885,
+        "iou_medio_pares": 0.101,
+        "distribuicao_a": {
+          "title": 10,
+          "paragraph": 61,
+          "image": 15,
+          "table": 1
+        },
+        "distribuicao_b": {
+          "paragraph": 61,
+          "table": 1,
+          "image": 3
+        }
+      },
+      "docling-native": {
+        "n_blocks_a": 87,
+        "n_blocks_b": 96,
+        "n_casados": 63,
+        "n_tipo_concorda": 48,
+        "taxa_match": 0.7241,
+        "taxa_tipo": 0.7619,
+        "iou_medio_pares": 0.229,
+        "distribuicao_a": {
+          "title": 10,
+          "paragraph": 61,
+          "image": 15,
+          "table": 1
+        },
+        "distribuicao_b": {
+          "paragraph": 54,
+          "title": 10,
+          "list_item": 15,
+          "caption": 1,
+          "image": 15,
+          "table": 1
+        }
+      }
+    }
+  }
+}
