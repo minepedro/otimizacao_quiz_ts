@@ -1,7 +1,7 @@
 {
   "best_0": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 12.4577,
+    "tempo_seg_medio": 12.6067,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.2,
     "sim_levenshtein": 0.6858,
@@ -12,7 +12,7 @@
   },
   "best_02": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.7764,
+    "tempo_seg_medio": 5.8899,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.0,
     "sim_levenshtein": 0.6856,
@@ -23,7 +23,7 @@
   },
   "greedy_05": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.7678,
+    "tempo_seg_medio": 5.8509,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 4.9,
     "sim_levenshtein": 0.6858,
@@ -34,7 +34,7 @@
   },
   "confidence": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.7837,
+    "tempo_seg_medio": 5.8891,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.0,
     "sim_levenshtein": 0.6855,
@@ -45,7 +45,7 @@
   },
   "score_composto": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.8221,
+    "tempo_seg_medio": 5.8209,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.1,
     "sim_levenshtein": 0.6864,
@@ -56,7 +56,7 @@
   },
   "anchor": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.774,
+    "tempo_seg_medio": 5.8777,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 4.7,
     "sim_levenshtein": 0.6902,
@@ -67,7 +67,7 @@
   },
   "rtree_02": {
     "n_pdfs_sem_erro": 9,
-    "tempo_seg_medio": 5.7874,
+    "tempo_seg_medio": 5.8289,
     "num_blocks_medio": 78.7,
     "num_tipos_medio": 5.0,
     "sim_levenshtein": 0.6856,
@@ -75,5 +75,27 @@
     "sim_bigramas": 0.7032,
     "tamanho_relativo": 0.8183,
     "qualidade_excesso": 0.7801
+  },
+  "two_pass": {
+    "n_pdfs_sem_erro": 9,
+    "tempo_seg_medio": 5.8118,
+    "num_blocks_medio": 78.7,
+    "num_tipos_medio": 5.1,
+    "sim_levenshtein": 0.6715,
+    "cobertura_palavras": 0.7713,
+    "sim_bigramas": 0.7022,
+    "tamanho_relativo": 0.8038,
+    "qualidade_excesso": 0.7801
+  },
+  "em": {
+    "n_pdfs_sem_erro": 4,
+    "tempo_seg_medio": 3.1873,
+    "num_blocks_medio": 70.2,
+    "num_tipos_medio": 3.8,
+    "sim_levenshtein": 0.6986,
+    "cobertura_palavras": 0.7723,
+    "sim_bigramas": 0.6839,
+    "tamanho_relativo": 0.8164,
+    "qualidade_excesso": 0.6924
   }
 }

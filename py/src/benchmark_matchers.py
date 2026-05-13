@@ -88,6 +88,8 @@ def main() -> int:
         "score_composto": hibrido_v2.extrair_score_composto,
         "anchor": hibrido_v2.extrair_anchor,
         "rtree_02": hibrido_v2.extrair_rtree_02,
+        "two_pass": hibrido_v2.extrair_two_pass,
+        "em": hibrido_v2.extrair_em,
     }
 
     for matcher_name in matcher_names:

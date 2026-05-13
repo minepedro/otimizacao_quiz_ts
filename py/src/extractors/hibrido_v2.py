@@ -601,6 +601,180 @@ def matcher_rtree_02(bloco: dict, regioes: list[RegiaoLayout], img_h: int) -> "R
 
 
 # ============================================================
+# Two-pass com refinamento de coesao (#3)
+# ============================================================
+# Pass 1: matcher base (best_02) atribui tipos.
+# Pass 2: pra cada bloco, checa se o tipo atribuido faz sentido
+#         pelo font_size. Se font_size eh outlier (>2*MAD do mediano
+#         dos blocos do mesmo tipo), considera trocar pro tipo
+#         vizinho mais compativel.
+
+TWO_PASS_FONT_OUTLIER_MULT = 2.0  # quantos MADs pra considerar outlier
+
+
+def _two_pass_anota_tipo(b: dict, novo_tipo: str) -> None:
+    """Salva tipo override (lido pelo pipeline depois do matching)."""
+    b["_tipo_override"] = novo_tipo
+
+
+def pre_process_two_pass(blocos: list[dict], regioes: list[RegiaoLayout]) -> None:
+    """Pass 1: best_02. Pass 2: refina por coesao de font_size."""
+    # PASS 1 — atribui tipo via best_02
+    for b in blocos:
+        melhor = None
+        melhor_overlap = 0.0
+        for r in regioes:
+            overlap = _intersecao_relativa(b["bbox_img"], r.bbox)
+            if overlap > melhor_overlap:
+                melhor_overlap = overlap
+                melhor = r
+        if melhor and melhor_overlap >= 0.20:
+            b["_two_pass_regiao"] = melhor
+            b["_two_pass_tipo"] = classe_para_tipo_bloco(melhor.classe)
+        else:
+            b["_two_pass_regiao"] = None
+            b["_two_pass_tipo"] = "paragraph"
+
+    # PASS 2 — agrupa por tipo e checa coesao de font_size
+    grupos_por_tipo: dict[str, list[dict]] = {}
+    for b in blocos:
+        grupos_por_tipo.setdefault(b["_two_pass_tipo"], []).append(b)
+
+    fonts_por_tipo: dict[str, tuple[float, float]] = {}  # tipo -> (mediana, MAD)
+    for tipo, bs in grupos_por_tipo.items():
+        if len(bs) < 2:
+            continue
+        fonts = [b["font_size"] for b in bs]
+        med = median(fonts)
+        mad = median([abs(f - med) for f in fonts]) or 1.0
+        fonts_por_tipo[tipo] = (med, mad)
+
+    # Pra cada bloco: se font eh outlier do seu tipo, vê se tem outro tipo melhor
+    for b in blocos:
+        tipo_atual = b["_two_pass_tipo"]
+        if tipo_atual not in fonts_por_tipo:
+            continue
+        med_atual, mad_atual = fonts_por_tipo[tipo_atual]
+        if abs(b["font_size"] - med_atual) <= TWO_PASS_FONT_OUTLIER_MULT * mad_atual:
+            continue  # font normal pro tipo, mantem
+
+        # Outlier — busca tipo onde font_size eh tipico
+        melhor_tipo = tipo_atual
+        melhor_dist = abs(b["font_size"] - med_atual) / max(mad_atual, 0.5)
+        for outro_tipo, (med, mad) in fonts_por_tipo.items():
+            if outro_tipo == tipo_atual:
+                continue
+            dist = abs(b["font_size"] - med) / max(mad, 0.5)
+            if dist < melhor_dist - 0.5:  # margem pra evitar oscilacao
+                melhor_dist = dist
+                melhor_tipo = outro_tipo
+
+        if melhor_tipo != tipo_atual:
+            b["_two_pass_tipo"] = melhor_tipo
+            _two_pass_anota_tipo(b, melhor_tipo)
+            # Mantem regiao do melhor match original (pra preservar reading order)
+            # Mas marca que tipo foi corrigido por coesao
+            b["_two_pass_corrigido"] = True
+
+
+def matcher_two_pass(bloco: dict, regioes: list[RegiaoLayout], img_h: int) -> "RegiaoLayout | None":
+    """Devolve regiao baseada no tipo final do pass 2.
+
+    Como o tipo eh atribuido diretamente pelo two-pass, devolve regiao
+    proxy (a regiao escolhida no pass 1 OU None se foi orphan).
+
+    O pipeline depois respeita o tipo via classe_para_tipo_bloco —
+    pra isso funcionar com tipo customizado, criamos uma classe sintetica.
+    """
+    return bloco.get("_two_pass_regiao")
+
+
+# ============================================================
+# Soft assignment EM-like (#4) — propagacao por vizinhanca
+# ============================================================
+# Pass 1: matcher base atribui tipos.
+# Pass 2-3: pra cada bloco, conta tipo dos N vizinhos mais proximos.
+#           Se >= 60% dos vizinhos tem tipo Y diferente: muda pra Y.
+
+EM_NUM_ITERACOES = 2
+EM_NUM_VIZINHOS = 4
+EM_LIMIAR_PROPAGACAO = 0.60  # 60% dos vizinhos precisam concordar
+
+
+def pre_process_em(blocos: list[dict], regioes: list[RegiaoLayout]) -> None:
+    """Pass 1: best_02. Pass 2-3: propaga tipo via vizinhanca."""
+    # PASS 1 — best_02
+    for b in blocos:
+        melhor = None
+        melhor_overlap = 0.0
+        for r in regioes:
+            overlap = _intersecao_relativa(b["bbox_img"], r.bbox)
+            if overlap > melhor_overlap:
+                melhor_overlap = overlap
+                melhor = r
+        if melhor and melhor_overlap >= 0.20:
+            b["_em_regiao"] = melhor
+            b["_em_tipo"] = classe_para_tipo_bloco(melhor.classe)
+        else:
+            b["_em_regiao"] = None
+            b["_em_tipo"] = "paragraph"
+
+    # Indexa centro de cada bloco pra busca de vizinhos
+    centros = []
+    for b in blocos:
+        bb = b["bbox_img"]
+        cx = (bb[0] + bb[2]) / 2
+        cy = (bb[1] + bb[3]) / 2
+        centros.append((cx, cy))
+
+    def dist(i: int, j: int) -> float:
+        cxi, cyi = centros[i]
+        cxj, cyj = centros[j]
+        return ((cxi - cxj) ** 2 + (cyi - cyj) ** 2) ** 0.5
+
+    # PASS 2-3 — propagacao iterativa
+    for _ in range(EM_NUM_ITERACOES):
+        novos_tipos = []
+        for i, b in enumerate(blocos):
+            # Acha N vizinhos mais proximos (excluindo o proprio)
+            distancias = [(j, dist(i, j)) for j in range(len(blocos)) if j != i]
+            distancias.sort(key=lambda x: x[1])
+            vizinhos_idx = [j for j, _ in distancias[:EM_NUM_VIZINHOS]]
+
+            # Conta tipos dos vizinhos
+            tipos_viz: dict[str, int] = {}
+            for j in vizinhos_idx:
+                t = blocos[j]["_em_tipo"]
+                tipos_viz[t] = tipos_viz.get(t, 0) + 1
+
+            # Tipo dominante
+            tipo_dominante, count = max(tipos_viz.items(), key=lambda x: x[1])
+            fracao = count / max(len(vizinhos_idx), 1)
+
+            tipo_atual = b["_em_tipo"]
+            if tipo_dominante != tipo_atual and fracao >= EM_LIMIAR_PROPAGACAO:
+                # Maioria dos vizinhos eh tipo diferente — propaga
+                novos_tipos.append((i, tipo_dominante))
+            else:
+                novos_tipos.append((i, tipo_atual))
+
+        # Aplica mudancas (pra todas as iteracoes acontecerem com snapshot
+        # do estado anterior — evita oscilacao causal)
+        for i, tipo in novos_tipos:
+            blocos[i]["_em_tipo"] = tipo
+
+    # Anota tipo final como override
+    for b in blocos:
+        if "_em_tipo" in b:
+            b["_tipo_override"] = b["_em_tipo"]
+
+
+def matcher_em(bloco: dict, regioes: list[RegiaoLayout], img_h: int) -> "RegiaoLayout | None":
+    """Devolve regiao do EM (proxy via best match original)."""
+    return bloco.get("_em_regiao")
+
+
+# ============================================================
 # Registry e tabela de pre-processamento
 # ============================================================
 
@@ -614,6 +788,8 @@ PRE_PROCESS: dict[str, "PreProcessFn | None"] = {
     "score_composto": None,
     "anchor": pre_process_anchor,
     "rtree_02": pre_process_rtree,
+    "two_pass": pre_process_two_pass,
+    "em": pre_process_em,
 }
 
 # Registry: nome -> (matcher_fn, descricao)
@@ -625,6 +801,8 @@ MATCHERS: dict[str, tuple[MatcherFn, str]] = {
     "score_composto": (matcher_score_composto, "Score IoS + font_size + regex bullet + posicao Y (+penalidades)"),
     "anchor": (matcher_anchor, "Anchor + propagacao: anchor com IoS>=0.5 + vizinhos herdam tipo"),
     "rtree_02": (matcher_rtree_02, "Best match threshold 0.2 + busca espacial R-tree"),
+    "two_pass": (matcher_two_pass, "Pass 1 best_02 + Pass 2 refina coesao por font_size"),
+    "em": (matcher_em, "Pass 1 best_02 + Pass 2-3 propagacao por vizinhanca (EM-like)"),
 }
 
 
@@ -709,7 +887,10 @@ def _extrair_com_matcher(
             for vi, b in enumerate(blocos_vetorial):
                 regiao_escolhida = matcher_fn(b, regioes, img_h)
 
-                if regiao_escolhida:
+                # Pre-process pode ter setado tipo override (two_pass, em)
+                if "_tipo_override" in b:
+                    tipo = b["_tipo_override"]
+                elif regiao_escolhida:
                     if regiao_escolhida.classe == "abandon":
                         tipo = _refinar_tipo_abandon(regiao_escolhida.bbox, img_h)
                     else:
@@ -860,3 +1041,11 @@ def extrair_anchor(caminho_pdf: str | Path) -> ResultadoExtracao:
 
 def extrair_rtree_02(caminho_pdf: str | Path) -> ResultadoExtracao:
     return _extrair_com_matcher(caminho_pdf, "rtree_02")
+
+
+def extrair_two_pass(caminho_pdf: str | Path) -> ResultadoExtracao:
+    return _extrair_com_matcher(caminho_pdf, "two_pass")
+
+
+def extrair_em(caminho_pdf: str | Path) -> ResultadoExtracao:
+    return _extrair_com_matcher(caminho_pdf, "em")
