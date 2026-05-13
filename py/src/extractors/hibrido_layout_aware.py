@@ -122,6 +122,54 @@ def _deduplica_linhas_consecutivas(texto: str) -> str:
     return "\n".join(out)
 
 
+# Sprint 9 item 2: regex pra remover bullet do INICIO do texto vetorial
+# (evita duplicacao quando o markdown gera "- " e o texto original ja tinha "•")
+RE_STRIP_BULLET_INICIAL = re.compile(
+    r"^[\s ]*("
+    r"[-–—•·●○◦▪▫►▸→❯>]"
+    r"|\d+[.)]"
+    r"|[a-zA-Z][.)]"
+    r"|\([a-zA-Z0-9]{1,3}\)"
+    r")\s+"
+)
+
+
+def _strip_bullet_inicial(texto: str) -> str:
+    """Sprint 9 item 2: remove bullet/numero/letra do inicio do texto."""
+    return RE_STRIP_BULLET_INICIAL.sub("", texto, count=1)
+
+
+# Sprint 9 item 2 (refino): bullets INLINE (no meio do texto) viram nova linha
+# Pra blocos list_item que tem varios items concatenados (ex: "Item1 • Item2 • Item3")
+RE_BULLET_INLINE = re.compile(r"\s+([•·●○◦▪▫►▸→❯])\s+")
+
+
+def _separar_bullets_inline(texto: str) -> str:
+    """Substitui bullets inline por quebra de linha (cria multiplos list items)."""
+    # Insere \n antes de cada bullet inline pra serem renderizados como sub-itens
+    return RE_BULLET_INLINE.sub(r"\n\1 ", texto)
+
+
+def _normalizar_quebras_intra_paragrafo(texto: str) -> str:
+    """Sprint 9 item 3: substitui \\n isolada (intra-paragrafo) por espaco.
+
+    Mantem \\n\\n (separador real de paragrafos). Multiplos espacos viram 1.
+    """
+    if not texto:
+        return texto
+    # Marca \n\n com sentinela
+    SENT = "\x00"
+    # \n+ com 2 ou mais → mantem como separador (vira 1 sentinela)
+    texto = re.sub(r"\n\s*\n+", SENT, texto)
+    # \n unica → espaco
+    texto = texto.replace("\n", " ")
+    # Restaura sentinela como \n\n
+    texto = texto.replace(SENT, "\n\n")
+    # Multiplos espacos → 1
+    texto = re.sub(r" +", " ", texto)
+    return texto.strip()
+
+
 def _eh_list_item(texto: str) -> bool:
     """A4: detecta se o texto comeca com bullet/numero de lista."""
     return bool(RE_LIST_ITEM.match(texto))
@@ -193,10 +241,10 @@ def _extrair_blocos_vetorial(page: fitz.Page) -> list[dict]:
 
     Usa modo 'blocks' (com agrupamento heuristico de paragrafos) como
     estrutura primaria, e cruza com 'dict' (spans) apenas pra inferir
-    font_size de cada bloco. Isso evita fragmentacao excessiva que o
-    modo 'dict' puro causaria.
+    font_size + font_flags (bold/italic) de cada bloco.
     """
-    # 1. Spans com font_size (do modo "dict") — usamos so pro tamanho da fonte
+    # 1. Spans com font_size E font_flags (do modo "dict")
+    # font_flags bits: 1=italic, 4=bold (PyMuPDF docs)
     d = page.get_text("dict")
     spans_info: list[dict] = []
     for bx in d.get("blocks", []):
@@ -208,7 +256,11 @@ def _extrair_blocos_vetorial(page: fitz.Page) -> list[dict]:
                 bbox_span = span.get("bbox")
                 if sz is None or not bbox_span or len(bbox_span) < 4:
                     continue
-                spans_info.append({"bbox": tuple(bbox_span[:4]), "size": float(sz)})
+                spans_info.append({
+                    "bbox": tuple(bbox_span[:4]),
+                    "size": float(sz),
+                    "flags": int(span.get("flags", 0)),
+                })
 
     # 2. Blocos agrupados (modo "blocks") — estrutura principal
     blocos = []
@@ -222,14 +274,24 @@ def _extrair_blocos_vetorial(page: fitz.Page) -> list[dict]:
         if not texto:
             continue
 
-        # Acha font_size mediano dos spans cujo bbox cai dentro deste bloco
-        sizes_no_bloco = [
-            s["size"]
+        # Acha font_size + flags dos spans cujo bbox cai dentro deste bloco
+        spans_no_bloco = [
+            s
             for s in spans_info
             if x0 - 1 <= s["bbox"][0] and s["bbox"][2] <= x1 + 1
             and y0 - 1 <= s["bbox"][1] and s["bbox"][3] <= y1 + 1
         ]
-        font_size = median(sizes_no_bloco) if sizes_no_bloco else 12.0
+        sizes = [s["size"] for s in spans_no_bloco]
+        font_size = median(sizes) if sizes else 12.0
+
+        # Sprint 9 item 4: detecta bold/italic pelo flags da MAIORIA dos spans
+        # Threshold conservador (80%) pra evitar marcar paragrafos inteiros
+        # como bold quando so algumas palavras sao destacadas
+        n_spans = max(1, len(spans_no_bloco))
+        n_bold = sum(1 for s in spans_no_bloco if s["flags"] & 4)
+        n_italic = sum(1 for s in spans_no_bloco if s["flags"] & 1)
+        is_bold = n_bold >= n_spans * 0.80
+        is_italic = n_italic >= n_spans * 0.80
 
         blocos.append(
             {
@@ -237,6 +299,8 @@ def _extrair_blocos_vetorial(page: fitz.Page) -> list[dict]:
                 "text": texto,
                 "block_no": int(block_no),
                 "font_size": float(font_size),
+                "is_bold": is_bold,
+                "is_italic": is_italic,
             }
         )
     return blocos
@@ -348,32 +412,44 @@ def _calcular_niveis_listas(
 # ============================================================
 
 
-def _gerar_markdown_pagina(blocos: list[BlocoExtraido], niveis_lista: dict[str, int]) -> list[str]:
+def _gerar_markdown_pagina(
+    blocos: list[BlocoExtraido],
+    niveis_lista: dict[str, int],
+    style_map: dict[str, tuple[bool, bool]] | None = None,
+) -> list[str]:
     """Gera lista de strings markdown pros blocos de uma pagina."""
+    # Sprint 9: bold/italic DESATIVADOS — Pedro prefere texto limpo
     partes: list[str] = []
     for b in blocos:
         if b.type in TIPOS_FORA_DO_TEXTO:
             continue
         texto = b.text
+
         if b.type == "title":
-            level = b.level if b.level else 1
-            partes.append("#" * level + " " + texto)
+            # Sprint 9 item 1: TODO titulo vira ## (igual Docling padrao)
+            partes.append("## " + texto)
         elif b.type == "list_item":
             indent = "  " * niveis_lista.get(b.block_id or "", 0)
-            partes.append(f"{indent}- {texto}")
+            # Sprint 9: se texto tem bullets inline (transformados em \n),
+            # quebra em multiplos items separados (igual Docling)
+            items = [ln.strip() for ln in texto.split("\n") if ln.strip()]
+            for item in items:
+                partes.append(f"{indent}- {item}")
         elif b.type == "table":
+            # Item 5 desativado: image_path so no JSON pra nao poluir qexc
             partes.append(f"```\n{texto}\n```")
         elif b.type == "formula":
             partes.append(f"$$\n{texto}\n$$")
         elif b.type == "caption":
-            partes.append(f"_{texto}_")
+            partes.append(texto)
         elif b.type == "image":
-            # D2 desativado no markdown por enquanto (poluia qexc).
-            # Texto OCR substancial vira paragraph; imagens sem texto util
-            # ficam fora do markdown (image_path preservado no JSON pra RAG).
+            # Item 5 desativado: image_path mantido no JSON (RAG),
+            # mas NAO inserido no markdown (poluia qexc com hashes).
+            # Texto OCR substancial vira paragrafo.
             if texto and len(texto) >= 30:
                 partes.append(texto)
         else:
+            # paragraph e outros tipos genericos
             partes.append(texto)
     return partes
 
@@ -449,6 +525,8 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
             # Sprint 8 item 2: dict paralelo com ordem natural do PDF (block_no)
             # pra reading order multi-coluna funcionar corretamente
             pdf_order_map: dict[str, int] = {}
+            # Sprint 9 item 4: dict paralelo com style (bold, italic) por block_id
+            style_map: dict[str, tuple[bool, bool]] = {}
 
             for vi, b in enumerate(blocos_vetorial):
                 # Sprint 8 item 1: best_02 (threshold IoS >= 0.20, estilo Docling)
@@ -479,20 +557,42 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
                 if tipo == "image" and len(b["text"]) > 100:
                     tipo = "paragraph"
 
-                # A2: nivel pra title via font_size
+                # Sprint 9 item 1: TODO titulo vira level=1 (markdown ##),
+                # mesma estrategia do Docling. Removida heuristica de
+                # font_size que era inconsistente entre paginas.
                 level: int | None = None
                 if tipo == "title":
-                    level = _calcular_nivel_titulo(b["font_size"], font_size_mediano)
+                    level = 1   # sempre H2 no markdown (## vem de level+1)
+
+                # Sprint 9 item 2: strip bullet duplicado em list_item
+                # ORDEM IMPORTA:
+                #  1. strip bullet inicial
+                #  2. normalizar quebras intra-paragrafo (\\n -> espaco)
+                #  3. separar bullets inline em quebras (cria items markdown)
+                texto_final = b["text"]
+                if tipo == "list_item":
+                    texto_final = _strip_bullet_inicial(texto_final)
+
+                # Sprint 9 item 3: normaliza quebras de linha intra-paragrafo
+                texto_final = _normalizar_quebras_intra_paragrafo(texto_final)
+
+                if tipo == "list_item":
+                    # Apos normalizar quebras, bullets inline ficam como ' • '
+                    # Substituir por \\n cria items separados no markdown
+                    texto_final = re.sub(r"\s+[•·●○◦▪▫►▸→❯]\s+", "\n", texto_final)
 
                 block_id = f"p{page_idx}-vec{vi}"
                 bloco = BlocoExtraido(
                     type=tipo,
-                    text=b["text"],
+                    text=texto_final,
                     page_idx=page_idx,
                     bbox=b["bbox_pdf"],
                     block_id=block_id,
                     level=level,
                 )
+                # Sprint 9 item 4: anota bold/italic pra usar no markdown
+                # (campos extras nao sao do schema BlocoExtraido — guardamos no dict)
+                style_map[block_id] = (b.get("is_bold", False), b.get("is_italic", False))
                 blocos_pagina.append(bloco)
                 pdf_order_map[block_id] = b["block_no"]   # Sprint 8 item 2
                 if tipo == "list_item":
@@ -620,7 +720,7 @@ def extrair(caminho_pdf: str | Path) -> ResultadoExtracao:
             paginas_texto.append("\n".join(partes_texto_pagina))
 
             # Markdown
-            partes_md = _gerar_markdown_pagina(blocos_pagina, niveis_lista)
+            partes_md = _gerar_markdown_pagina(blocos_pagina, niveis_lista, style_map)
             if partes_md:
                 md_partes.append("\n\n".join(partes_md))
 
